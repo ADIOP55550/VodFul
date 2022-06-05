@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="640" height="640" viewBox="0 0 640 640" xml:space="preserve">
+<desc>Created with Fabric.js 4.6.0</desc>
+<defs>
+</defs>
+<g transform="matrix(1 0 0 1 320 320)" id="60ttDK9bHkOJVMbqFUYZ8"  >
+<linearGradient id="SVGID_166" gradientUnits="userSpaceOnUse" gradientTransform="matrix(1 0 0 1 -259.65 -202.2)"  x1="185.6" y1="263.79546198625064" x2="512.10681" y2="218.99546198625066">
+<stop offset="0%" style="stop-color:#04619F;stop-opacity: 1"/>
+<stop offset="100%" style="stop-color:#000000;stop-opacity: 1"/>
+</linearGradient>
+<filter id="SVGID_389" y="-24%" height="148%" x="-23%" width="146%" >
+	<feGaussianBlur in="SourceAlpha" stdDeviation="3.5"></feGaussianBlur>
+	<feOffset dx="7" dy="10" result="oBlur" ></feOffset>
+	<feFlood flood-color="rgb(0,0,0)" flood-opacity="1"/>
+	<feComposite in2="oBlur" operator="in" />
+	<feMerge>
+		<feMergeNode></feMergeNode>
+		<feMergeNode in="SourceGraphic"></feMergeNode>
+	</feMerge>
+</filter>
+<path style="stroke: rgb(0,0,0); stroke-width: 0; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: url(#SVGID_166); fill-rule: nonzero; opacity: 1;filter: url(#SVGID_389);" vector-effect="non-scaling-stroke"  transform=" translate(0, 0)" d="M 79.02697 -202.19546 L 259.65340000000003 -202.19546 L 259.65340000000003 -152.41436 L 100.85163000000003 -152.41436 L 100.85163000000003 -152.41436 C 87.55996000000003 -152.41436 75.49451000000003 -144.64688999999998 69.99206000000002 -132.54764999999998 L 39.293640000000025 -65.04544999999997 L 259.56776 -65.04544999999997 L 259.56776 -21.324959999999976 L 19.813440000000014 -21.324959999999976 L -78.04651999999999 198.30758000000003 L -78.04651999999999 198.30758000000003 C -79.10906999999999 200.69233000000003 -81.48525999999998 202.21938000000003 -84.09589999999999 202.19519000000003 C -86.70653999999999 202.17101000000002 -89.05402999999998 200.60021000000003 -90.07222999999999 198.19618000000003 L -259.65341 -202.19545 L -256.27709 -202.19545 L -256.27709 -202.19545 C -224.05786999999998 -202.19545 -194.93887999999998 -182.99396 -182.24787999999998 -153.37949 L -92.26236999999998 56.60175000000001 L -92.26236999999998 56.60175000000001 C -90.84659999999998 59.90546000000001 -87.61653999999997 62.06420000000001 -84.02252999999997 62.10868000000001 C -80.42851999999998 62.15316000000001 -77.14602999999997 60.07502000000001 -75.64892999999998 56.80736000000001 C -41.79124999999998 -17.092429999999986 26.95010000000002 -167.13141 26.95010000000002 -167.13141 C 36.37983000000002 -187.71330999999998 56.53363000000002 -201.18071999999998 79.00838000000002 -202.14049999999997 z" stroke-linecap="round" />
+</g>
+</svg>
