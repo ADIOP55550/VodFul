@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <x-partials.head />
+    <x-head />
 
 
 </head>
