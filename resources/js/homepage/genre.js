@@ -1,3 +1,7 @@
+/*
+ *   Copyright (c) 2022
+ *   All rights reserved.
+ */
 window.initListener = (firstpage, firstPageUrl) => {
 
     let first_url = firstPageUrl + "?page=" + firstpage;
@@ -106,4 +110,3 @@ window.initListener = (firstpage, firstPageUrl) => {
 
 
 }
-

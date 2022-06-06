@@ -1,43 +1,44 @@
+/*
+ *   Copyright (c) 2022
+ *   All rights reserved.
+ */
 let modalElement;
 let loginModal;
 let modalSwitcher;
 const switcherLoginIndex = 0;
 const switcherRegisterIndex = 1;
-let switcherLoginElement;
-let switcherRegisterElement;
+console.log("start");
 
 document.addEventListener("DOMContentLoaded", () => {
-    console.log("start");
+    console.log("DOMContentLoaded");
     modalElement = document.querySelector("#login-modal");
     modalSwitcher = UIkit.switcher(modalElement.querySelector("#login-switcher"));
-    switcherLoginElement = modalElement.querySelector("#login-form-wrapper");
-    switcherRegisterElement = modalElement.querySelector("#register-form-wrapper");
-
     loginModal = UIkit.modal(modalElement);
 
-    // remove /login and /register on login modal close
-    modalElement.addEventListener('hide', () => {
-        window.history.pushState({}, "", window.location.href.substring(0, ((window.location.href.lastIndexOf("/login") + 1) || (window.location.href.lastIndexOf("/register"))) - 1));
-    });
-    // add /login on login modal open
-    switcherLoginElement.addEventListener('beforeshow', () => {
-        window.history.pushState({}, "", "/login");
-    });
-    // add /register on login modal open
-    switcherRegisterElement.addEventListener('beforeshow', () => {
-        window.history.pushState({}, "", "/register");
-    });
+    // timeout needed, because else /login was added without reason
+    setTimeout(() => {
+        console.log("load");
 
+        // remove /login and /register on login modal close
+        modalElement.addEventListener('hide', () => {
+            console.log("removing /login and /register");
+            window.history.pushState({}, "", window.location.href.substring(0, ((window.location.href.lastIndexOf("/login") + 1) || (window.location.href.lastIndexOf("/register") + 1)) - 1));
+        });
 
-    console.log(switcherRegisterElement);
-    console.log(switcherLoginElement);
-    UIkit.util.on('#register-form-wrapper', 'show', function () {
-        console.log("Shown");
-    });
-    UIkit.util.on('#login-form-wrapper', 'hide', function () {
-        console.log("Hidden");
-    });
+        // add /login on login modal open
+        UIkit.util.on('#login-form-wrapper', 'beforeshow', function () {
+            console.log("adding /login")
+            window.history.pushState({}, "", "/login");
+        });
+
+        // add /register on login modal open
+        UIkit.util.on('#register-form-wrapper', 'beforeshow', function () {
+            console.log("adding /register")
+            window.history.pushState({}, "", "/register");
+        });
+    }, 300);
 });
+
 
 window.openLoginModal = () => {
     if (modalElement) {

@@ -1,11 +1,9 @@
-@extends('layouts.main')
-
-@section('main')
+<x-layouts.user>
 
     <div class="uk-container uk-margin-xlarge-top">
         <h1 class="uk-margin-remove-bottom">Profil {{$user->name}}</h1>
         @if($user->is_admin)
-            <h3 class="uk-margin-remove-top">(Administrator)</h3>
+        <h3 class="uk-margin-remove-top">(Administrator)</h3>
         @endif
 
         <x-profile.choose-plan-component :user="$user"></x-profile.choose-plan-component>
@@ -17,7 +15,4 @@
 
     </div>
 
-
-
-
-@endsection
+</x-layouts.user>

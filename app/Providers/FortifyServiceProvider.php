@@ -49,5 +49,8 @@ class FortifyServiceProvider extends ServiceProvider
         Fortify::loginView(function () {
             return view('homepage', ['openLogin' => true]);
         });
+        Fortify::registerView(function () {
+            return view('homepage', ['openRegister' => true]);
+        });
     }
 }

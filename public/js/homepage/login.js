@@ -1,42 +1,46 @@
+/*
+ *   Copyright (c) 2022
+ *   All rights reserved.
+ */
 /******/ (() => { // webpackBootstrap
 var __webpack_exports__ = {};
 /*!****************************************!*\
   !*** ./resources/js/homepage/login.js ***!
   \****************************************/
+/*
+ *   Copyright (c) 2022
+ *   All rights reserved.
+ */
 var modalElement;
 var loginModal;
 var modalSwitcher;
 var switcherLoginIndex = 0;
 var switcherRegisterIndex = 1;
-var switcherLoginElement;
-var switcherRegisterElement;
+console.log("start");
 document.addEventListener("DOMContentLoaded", function () {
-  console.log("start");
+  console.log("DOMContentLoaded");
   modalElement = document.querySelector("#login-modal");
   modalSwitcher = UIkit.switcher(modalElement.querySelector("#login-switcher"));
-  switcherLoginElement = modalElement.querySelector("#login-form-wrapper");
-  switcherRegisterElement = modalElement.querySelector("#register-form-wrapper");
-  loginModal = UIkit.modal(modalElement); // remove /login and /register on login modal close
+  loginModal = UIkit.modal(modalElement); // timeout needed, because else /login was added without reason
 
-  modalElement.addEventListener('hide', function () {
-    window.history.pushState({}, "", window.location.href.substring(0, (window.location.href.lastIndexOf("/login") + 1 || window.location.href.lastIndexOf("/register")) - 1));
-  }); // add /login on login modal open
+  setTimeout(function () {
+    console.log("load"); // remove /login and /register on login modal close
 
-  switcherLoginElement.addEventListener('beforeshow', function () {
-    window.history.pushState({}, "", "/login");
-  }); // add /register on login modal open
+    modalElement.addEventListener('hide', function () {
+      console.log("removing /login and /register");
+      window.history.pushState({}, "", window.location.href.substring(0, (window.location.href.lastIndexOf("/login") + 1 || window.location.href.lastIndexOf("/register") + 1) - 1));
+    }); // add /login on login modal open
 
-  switcherRegisterElement.addEventListener('beforeshow', function () {
-    window.history.pushState({}, "", "/register");
-  });
-  console.log(switcherRegisterElement);
-  console.log(switcherLoginElement);
-  UIkit.util.on('#register-form-wrapper', 'show', function () {
-    console.log("Shown");
-  });
-  UIkit.util.on('#login-form-wrapper', 'hide', function () {
-    console.log("Hidden");
-  });
+    UIkit.util.on('#login-form-wrapper', 'beforeshow', function () {
+      console.log("adding /login");
+      window.history.pushState({}, "", "/login");
+    }); // add /register on login modal open
+
+    UIkit.util.on('#register-form-wrapper', 'beforeshow', function () {
+      console.log("adding /register");
+      window.history.pushState({}, "", "/register");
+    });
+  }, 300);
 });
 
 window.openLoginModal = function () {

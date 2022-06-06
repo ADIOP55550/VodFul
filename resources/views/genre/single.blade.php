@@ -1,13 +1,9 @@
-@extends("layouts.main")
-
-
-@section('main')
+<x-layouts.user>
 
     @php
-        use App\Models\Movie as MovieAlias;
-        if(!isset($genre))
-            throw new Error();
-        $movies = MovieAlias::query()->whereBelongsTo($genre)->paginate(16);
+    if(!isset($genre))
+    throw new Error();
+    $movies = App\Models\Movie::query()->whereBelongsTo($genre)->paginate(16);
     @endphp
 
 
@@ -20,12 +16,9 @@
         </ul>
 
         <h1 class="uk-heading-medium uk-margin-top">{{$genre->name}}</h1>
-        <div
-            id="movies-list"
+        <div id="movies-list"
             class="uk-child-width-1-2 uk-child-width-1-3@s uk-child-width-1-4@m uk-child-width-1-5@l uk-child-width-1-6@xl"
-            uk-grid
-            {{--            uk-scrollspy="cls:uk-animation-slide-top-small;delay: 80;target:>div"--}}
-        >
+            uk-grid {{-- uk-scrollspy="cls:uk-animation-slide-top-small;delay: 80;target:>div" --}}>
         </div>
         <span id="bottom-detector" uk-scrollspy="repeat:true"></span>
 
@@ -36,4 +29,4 @@
         </script>
     </div>
 
-@endsection
+</x-layouts.user>

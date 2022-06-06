@@ -1,40 +1,37 @@
-{{--@extends('layouts.main')--}}
+@section('head')
+@parent
+<script src="{{ asset('/js/homepage/login.js') }}"></script>
 
-@push('scripts')
-    <script src="{{asset('/js/homepage/index.js')}}"></script>
-
-    @if(isset($openLogin) && $openLogin)
-        <script>
-            document.addEventListener('DOMContentLoaded', () => {
-                openLoginModal();
-            });
-        </script>
-    @endif
-    @if(isset($openRegister) && $openRegister)
-        <script>
-            document.addEventListener('DOMContentLoaded', () => {
-                openRegisterModal();
-            });
-        </script>
-    @endif
-
-@endpush
-
+@if (isset($openLogin) && $openLogin)
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+                    openLoginModal();
+                });
+</script>
+@endif
+@if (isset($openRegister) && $openRegister)
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+                    openRegisterModal();
+                });
+</script>
+@endif
+@endsection
 
 <div id="login-modal" class="uk-modal-full uk-animation-slide-bottom-medium uk-animation-fast" uk-modal>
     <div class="uk-modal-dialog uk-open">
         <button class="uk-modal-close-full uk-close-large" type="button" uk-close></button>
         <div class="uk-flex uk-flex-column splash-bg uk-flex-middle uk-height-viewport" uk-grid>
-            <img src="/images/logo/logo_shadow.svg" width="300" alt="logo" class="uk-margin-medium-top">
+            <img src="/images/logo/logo_shadow.svg" width="250" alt="logo" class="uk-margin-medium-top">
 
             <div class="uk-margin-top">
-                @if($errors->any())
-                    <div class="uk-alert-danger uk-dark" uk-alert>
-                        <a class="uk-alert-close" uk-close></a>
-                        @foreach ($errors->all() as $error)
-                            <p>{{ $error }}</p>
-                        @endforeach
-                    </div>
+                @if ($errors->any())
+                <div class="uk-alert-danger uk-dark" uk-alert>
+                    <a class="uk-alert-close" uk-close></a>
+                    @foreach ($errors->all() as $error)
+                    <p>{{ $error }}</p>
+                    @endforeach
+                </div>
                 @endif
             </div>
             <ul class="uk-subnav uk-subnav-pill uk-hidden" id="login-switcher"
@@ -44,7 +41,7 @@
             </ul>
             <ul class="uk-switcher uk-margin">
                 <li id="login-form-wrapper">
-                    <form action="{{route('login')}}" method="post" class="uk-light uk-margin-auto uk-margin-bottom">
+                    <form action="{{ route('login') }}" method="post" class="uk-light uk-margin-auto uk-margin-bottom">
                         @csrf
                         <h1>Log in:</h1>
                         <div class="uk-margin">
@@ -83,8 +80,8 @@
                     <a href="#register" uk-switcher-item="next">Don't have an account? Register!</a>
                 </li>
                 <li id="register-form-wrapper">
-                    <form action="{{route('login')}}" method="post"
-                          class="uk-light uk-margin-auto uk-margin-bottom uk-form-horizontal">
+                    <form action="{{ route('login') }}" method="post"
+                        class="uk-light uk-margin-auto uk-margin-bottom uk-form-horizontal">
                         @csrf
                         <h1>Register:</h1>
                         <div class="uk-margin">
@@ -119,7 +116,7 @@
                             </label>
                             <div class="uk-form-controls">
                                 <input class="uk-input" id="repeat-password-input" name="passwordRepeat"
-                                       type="password">
+                                    type="password">
                             </div>
                         </div>
 
@@ -129,7 +126,7 @@
                             </label>
                             <div class="uk-form-controls">
                                 <input class="uk-checkbox" type="checkbox" name="acceptTOS" id="accept-tos-checkbox"
-                                       required>
+                                    required>
                             </div>
                         </div>
 
