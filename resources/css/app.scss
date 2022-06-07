@@ -1,3 +1,7 @@
+/*
+ *   Copyright (c) 2022
+ *   All rights reserved.
+ */
 .splash-bg {
     background: linear-gradient(130deg, #04619f, #000000);
     background-size: 400% 400%;
@@ -5,9 +9,6 @@
     animation: scrollBg 150s ease infinite;
 }
 
-html {
-    background-color: #02304f;
-}
 
 @keyframes scrollBg {
     0% {

@@ -13,7 +13,7 @@
             @foreach(\App\Models\Genre::all() as $genre)
 
 
-            <a href="/genres/{{$genre->hashid()}}">
+            <a href="{{route('genres.show', ['genre'=>strtolower($genre->name)])}}">
                 <div>
                     <div class="uk-inline uk-transition-toggle uk-overflow-hidden">
                         <img src="https://loremflickr.com/320/240/{{$genre->name}}" width="1800" height="1200" alt="">

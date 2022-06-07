@@ -4,7 +4,8 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
+return new class extends Migration
+{
     /**
      * Run the migrations.
      *
@@ -19,8 +20,9 @@ return new class extends Migration {
 
             $table->string('name', 30);
             $table->string('slug', 30);
-            $table->string('price_monthly_id', 255)->collation('utf8_bin');
-            $table->string('price_yearly_id', 255)->collation('utf8_bin');
+            // $table->string('price_monthly_id', 255)->collation('utf8_bin');
+            // $table->string('price_yearly_id', 255)->collation('utf8_bin');
+            $table->string('stripe_product_id', 255)->collation('utf8_bin');
             $table->double('discount', 10, 3);
         });
     }

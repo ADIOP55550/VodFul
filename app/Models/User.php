@@ -69,6 +69,11 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    public function isAdmin()
+    {
+        return $this->is_admin;
+    }
+
     public function watchStatuses()
     {
         return $this->hasMany(WatchStatus::class);
@@ -87,5 +92,25 @@ class User extends Authenticatable
     public function ignored()
     {
         return $this->belongsTo(Playlist::class, 'ignored_id', 'id');
+    }
+
+    public function watches(Movie $movie)
+    {
+        $ws = $this->watchStatuses->firstWhere('movie', $movie);
+        if (is_null($ws)) {
+            $ws = WatchStatus::factory()
+                ->for($movie)
+                ->for($this)
+                ->make([
+                    'times_watched' => 1,
+                    'last_watched' => now()
+                ]);
+            $ws->save();
+            return;
+        }
+
+        $ws->times_watched += 1;
+        $ws->last_watched = now();
+        $ws->update();
     }
 }

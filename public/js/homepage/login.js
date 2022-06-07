@@ -1,7 +1,3 @@
-/*
- *   Copyright (c) 2022
- *   All rights reserved.
- */
 /******/ (() => { // webpackBootstrap
 var __webpack_exports__ = {};
 /*!****************************************!*\

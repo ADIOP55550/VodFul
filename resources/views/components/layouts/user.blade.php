@@ -5,6 +5,11 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.14.3/dist/css/uikit.min.css" />
 
     <link rel="stylesheet" href="/css/app.css">
+    <style>
+        html {
+            background-color: #02304f;
+        }
+    </style>
     @endpush
 
     @push('scripts')
@@ -23,6 +28,7 @@
         </div>
         <main id="main-container"
             class="uk-position-top uk-section uk-light uk-padding-remove uk-margin-large-bottom splash-bg uk-height-viewport">
+
             {{ $slot }}
         </main>
     </div>

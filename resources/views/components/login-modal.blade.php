@@ -80,7 +80,7 @@
                     <a href="#register" uk-switcher-item="next">Don't have an account? Register!</a>
                 </li>
                 <li id="register-form-wrapper">
-                    <form action="{{ route('login') }}" method="post"
+                    <form action="{{ route('register') }}" method="post"
                         class="uk-light uk-margin-auto uk-margin-bottom uk-form-horizontal">
                         @csrf
                         <h1>Register:</h1>
@@ -89,7 +89,8 @@
                                 Full Name:
                             </label>
                             <div class="uk-form-controls">
-                                <input class="uk-input" type="text" id="full-name-input" name="name" autofocus>
+                                <input class="uk-input" type="text" required id="full-name-input" name="name" {{
+                                    old('name') }} autofocus>
                             </div>
                         </div>
                         <div class="uk-margin">
@@ -97,7 +98,8 @@
                                 Email:
                             </label>
                             <div class="uk-form-controls">
-                                <input class="uk-input" type="text" id="email-input" name="email" autofocus>
+                                <input class="uk-input" type="email" required id="email-input" name="email" {{
+                                    old('email') }} autofocus>
                             </div>
                         </div>
 
@@ -106,7 +108,8 @@
                                 Password:
                             </label>
                             <div class="uk-form-controls">
-                                <input class="uk-input" id="password-input" name="password" type="password">
+                                <input class="uk-input" id="password-input" required name="password" {{ old('password')
+                                    }} type="password">
                             </div>
                         </div>
 
@@ -115,7 +118,7 @@
                                 Repeat password:
                             </label>
                             <div class="uk-form-controls">
-                                <input class="uk-input" id="repeat-password-input" name="passwordRepeat"
+                                <input class="uk-input" id="repeat-password-input" required name="password_confirmation"
                                     type="password">
                             </div>
                         </div>

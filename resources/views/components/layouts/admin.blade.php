@@ -19,10 +19,10 @@
     <div class="uk-position-relative">
         <x-login-modal :openLogin="$openLogin ?? false" :openRegister="$openRegister ?? false" />
         <div class="uk-position-top">
-            <x-navbar />
+            <x-admin.navbar />
         </div>
         <main id="main-container"
-            class="uk-position-top uk-section uk-light uk-padding-remove uk-margin-large-bottom splash-bg uk-height-viewport">
+            class="uk-position-top uk-section uk-padding-remove uk-margin-large-bottom uk-height-viewport uk-margin-large-top">
             {{ $slot }}
         </main>
     </div>

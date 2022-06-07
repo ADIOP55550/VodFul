@@ -15,8 +15,9 @@ class Plan extends Model
     protected $fillable = [
         'name',
         'slug',
-        'price_monthly_id',
-        'price_yearly_id',
+        // 'price_monthly_id',
+        // 'price_yearly_id',
+        'stripe_product_id',
         'discount'
     ];
 
@@ -24,5 +25,15 @@ class Plan extends Model
         'discount' => 0
     ];
 
+    public function getStripeProduct()
+    {
+        $stripe = \Laravel\Cashier\Cashier::stripe();
+        return $stripe->products->retrieve($this->stripe_product_id);
+    }
 
+    public function getStripePrices()
+    {
+        $stripe = \Laravel\Cashier\Cashier::stripe();
+        return $stripe->prices->search(['query' => 'active:\'true\' AND product:\'' . $this->stripe_product_id . '\'']);
+    }
 }

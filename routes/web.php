@@ -20,20 +20,37 @@ Route::get("/", function () {
     return view("homepage");
 })->name('homepage');
 
-Route::get('/profile', [UserController::class, 'profile'])->name('profile');
-Route::get('/profile/payment-methods', [UserController::class, 'paymentMethod'])->name('profile.payment-methods');
-Route::get('/profile/manage-subscriptions', [UserController::class, 'manageSubscriptions'])->name('profile.manage-subscriptions');
+Route::middleware(['auth'])->prefix('profile')->name('profile.')->group(function () {
+    Route::get('/', [UserController::class, 'profile'])->name('index');
+    Route::get('/payment-methods', [UserController::class, 'paymentMethod'])->name('payment-methods');
+    Route::get('/manage-subscriptions', [UserController::class, 'manageSubscriptions'])->name('manage-subscriptions');
+});
+
 Route::get('/subscribe/{plan}/{interval}', [UserController::class, 'subscribe'])->name('plan.subscribe');
 
-Route::get('/movie/thumbnail/{id}', [MovieController::class, 'getThumbnail'])->name('movie.thumbnail');
-Route::get('/movie/fav/{id}', [MovieController::class, 'addToFavourites'])->name('movie.fav');
-Route::get('/movie/ban/{id}', [MovieController::class, 'removeFromRecommendations'])->name('movie.ban');
+
+Route::middleware(['auth'])->name('movie.')->prefix('movie')->group(function () {
+    Route::get('/thumbnail/component', [MovieController::class, 'getThumbnailComponent'])->name('thumbnailComponent');
+    Route::get('/thumbnail/{id}', [MovieController::class, 'getThumbnail'])->name('thumbnail');
+    Route::post('/fav/{id}', [MovieController::class, 'addToFavourites'])->name('fav');
+    Route::post('/unfav/{id}', [MovieController::class, 'removeFromFavourites'])->name('unfav');
+    Route::post('/ban/{id}', [MovieController::class, 'removeFromRecommendations'])->name('ban');
+    Route::post('/unban/{id}', [MovieController::class, 'addToRecommendations'])->name('unban');
+});
+Route::middleware(['auth'])->resource('movie', MovieController::class);
+
 
 Route::resource('genres', GenreController::class);
-Route::resource('movie', MovieController::class);
 
 Route::get("/logout", function () {
     \Illuminate\Support\Facades\Auth::logout();
     return redirect("/");
+});
 
+
+Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {
+    Route::get('/', function () {
+        return view("admin.index");
+    })->name('index');
+    // Route::resource('users', UserController::class);
 });

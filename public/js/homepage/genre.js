@@ -870,7 +870,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
  *   Copyright (c) 2022
  *   All rights reserved.
  */
-window.initListener = function (firstpage, firstPageUrl) {
+window.initListener = function (firstpage, firstPageUrl, getThumbnailComponentUrl) {
   var first_url = firstPageUrl + "?page=" + firstpage;
   var curr_url = firstPageUrl + "?page=" + firstpage;
   var next_url = firstPageUrl + "?page=" + firstpage;
@@ -885,7 +885,7 @@ window.initListener = function (firstpage, firstPageUrl) {
       }
     }).then( /*#__PURE__*/function () {
       var _ref = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee(resp) {
-        var el, _iterator, _step, v, _div, div, endMarker;
+        var el, _iterator, _step, v, div, endMarker;
 
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee$(_context) {
           while (1) {
@@ -898,47 +898,30 @@ window.initListener = function (firstpage, firstPageUrl) {
                 curr_url = resp.data.meta.path;
                 el = document.querySelector("#movies-list");
                 _iterator = _createForOfIteratorHelper(resp.data.data);
-                _context.prev = 7;
 
-                _iterator.s();
-
-              case 9:
-                if ((_step = _iterator.n()).done) {
-                  _context.next = 18;
-                  break;
+                try {
+                  for (_iterator.s(); !(_step = _iterator.n()).done;) {
+                    v = _step.value;
+                    axios.get(getThumbnailComponentUrl.trim(), {
+                      params: {
+                        'id': v.id,
+                        'overlay': true
+                      },
+                      headers: {
+                        "Accept": 'text/html'
+                      }
+                    }).then(function (resp2) {
+                      var div = document.createElement("div");
+                      div.innerHTML = resp2.data;
+                      el.appendChild(div); // await new Promise(res => setTimeout(res, 70));
+                    });
+                  }
+                } catch (err) {
+                  _iterator.e(err);
+                } finally {
+                  _iterator.f();
                 }
 
-                v = _step.value;
-                _div = document.createElement("div");
-                _div.innerHTML = template(v);
-                el.appendChild(_div);
-                _context.next = 16;
-                return new Promise(function (res) {
-                  return setTimeout(res, 70);
-                });
-
-              case 16:
-                _context.next = 9;
-                break;
-
-              case 18:
-                _context.next = 23;
-                break;
-
-              case 20:
-                _context.prev = 20;
-                _context.t0 = _context["catch"](7);
-
-                _iterator.e(_context.t0);
-
-              case 23:
-                _context.prev = 23;
-
-                _iterator.f();
-
-                return _context.finish(23);
-
-              case 26:
                 if (next_url === null) {
                   div = document.createElement("div");
                   endMarker = document.createElement("h4");
@@ -949,12 +932,12 @@ window.initListener = function (firstpage, firstPageUrl) {
                   el.parentElement.appendChild(div);
                 }
 
-              case 27:
+              case 9:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, null, [[7, 20, 23, 26]]);
+        }, _callee);
       }));
 
       return function (_x) {
@@ -965,10 +948,6 @@ window.initListener = function (firstpage, firstPageUrl) {
   UIkit.util.on("#bottom-detector", "outview", function () {
     console.log("Outview 1");
   });
-
-  var template = function template(movie) {
-    return "\n    <div\n    class=\"uk-inline uk-dark uk-visible-toggle uk-animation-toggle uk-animation-slide-top\">\n        <img loading=\"lazy\"\n             src=\"".concat(movie.thumbnailUrl, "\"\n             width=\"200\"\n             style=\"aspect-ratio: 2/3\"\n             alt=\"\">\n        <div\n            class=\"uk-overlay-primary uk-position-cover uk-invisible-hover uk-animation-fade uk-animation-fast uk-hidden-touch\">\n            <div class=\"uk-position-top uk-height-1-1\">\n                <a href=\"/movie/").concat(movie.id, "\" class=\"uk-text-decoration-none\">\n                    <div\n                        class=\"uk-invisible-hover uk-animation-slide-top-medium uk-animation-fast uk-margin-small-top uk-padding-small uk-height-max-small\">").concat(movie.title, "</div>\n                    <span uk-icon=\"icon: play-circle; ratio: 2\"\n                          class=\"uk-text-center uk-width-1-1 uk-margin-small-top\"></span>\n                </a>\n\n                <div\n                    class=\"uk-position-bottom uk-flex uk-flex-between uk-width-1-1 uk-margin-small-bottom uk-padding-small\" style=\"pointer-events: none\">\n                    <a href=\"/movie/ban/").concat(movie.id, "\" style=\"pointer-events: all\" uk-icon=\"icon: ban\"\n                       uk-tooltip=\"Nie interesuje mnie to\">\n                    </a>\n                    <a href=\"/movie/fav/").concat(movie.id, "\" style=\"pointer-events: all\" uk-icon=\"icon: plus\"\n                       uk-tooltip=\"Dodaj do mojej listy\">\n                    </a>\n                </div>\n            </div>\n        </div>\n        <div\n            class=\"uk-overlay uk-hidden-notouch uk-position-cover\" uk-toggle=\"target: #movie-modal-").concat(movie.hashid, "\"></div>\n\n        <div>\n<!--            MODAL-->\n            <div id=\"movie-modal-").concat(movie.hashid, "\" uk-modal\n                 class=\"uk-hidden-notouch uk-modal-full uk-animation-slide-bottom uk-light\"\n                 style=\"background: rgba(26,32,44,0.67)\">\n                <div class=\"uk-modal-dialog uk-background-secondary\">\n                    <button class=\"uk-modal-close-full uk-background-secondary uk-light\" type=\"button\"\n                            uk-close></button>\n                    <div class=\"uk-modal-header uk-background-secondary\">\n                        <h2 class=\"uk-modal-title\">").concat(movie.title, "</h2>\n                    </div>\n                    <div class=\"uk-modal-body\">\n                        <img loading=\"lazy\"\n                             class=\"uk-align-center uk-height-max-medium\"\n                             src=\"").concat(movie.thumbnailUrl, "\"\n                             alt=\"\">\n                        <p>").concat(movie.description, "</p>\n                    </div>\n                    <div class=\"uk-modal-footer uk-text-right uk-background-secondary\">\n                        <button class=\"uk-button uk-button-default uk-modal-close\" type=\"button\">Close</button>\n                        <a href=\"/movie/").concat(movie.id, "\" class=\"uk-button uk-button-primary\" type=\"button\">Watch\n                            <span\n                                class=\"uk-margin-small-right\" uk-icon=\"play\"></span></a>\n                    </div>\n                </div>\n            </div>\n        </div>\n    </div>");
-  };
 };
 })();
 

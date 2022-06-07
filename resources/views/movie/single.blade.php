@@ -14,14 +14,17 @@
 
 
         <h1>
-            Movie: {{$movie->title}} #{{$movie->hashid()}}
+            {{$movie->title}}
         </h1>
-        <x-movie.thumbnail :movie="$movie" :overlay="false"></x-movie.thumbnail>
+        {{-- <x-movie.thumbnail :movie="$movie" :overlay="false"></x-movie.thumbnail> --}}
 
-        <iframe width="560" height="315" src="https://www.youtube.com/embed/djV11Xbc914" title="YouTube video player"
-            frameborder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowfullscreen></iframe>
+
+
+        @if(Str::startsWith($movie->video, 'yt:'))
+        <iframe class="uk-margin-bottom" id="movie"
+            src="https://www.youtube-nocookie.com/embed/{{Str::substr($movie->video, 3)}}?autoplay=1&rel=0&modestbranding=1&playsinline=0"
+            width="1920" height="1080" allowfullscreen uk-responsive></iframe>
+        @endif
 
     </div>
 

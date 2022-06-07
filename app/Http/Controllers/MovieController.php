@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Movie;
+use GrahamCampbell\ResultType\Success;
 use Illuminate\Auth\Access\Gate;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate as FacadesGate;
 
 class MovieController extends Controller
 {
@@ -47,7 +50,12 @@ class MovieController extends Controller
      */
     public function show(string $movie_id)
     {
+        $user = Auth::user();
         $movie = Movie::fromHashId($movie_id);
+        if (FacadesGate::check('watch', $movie)) {
+            $u = \App\Models\User::findOrFail($user->id);
+            $u->watches($movie);
+        }
         return view('movie.single', ['movie' => $movie]);
     }
 
@@ -85,24 +93,76 @@ class MovieController extends Controller
         //
     }
 
+    private function getUndoForm(string $route, string $text = "undo", string $method = 'post')
+    {
+        return '<form method="' . $method
+            . '" action="' . $route . '">'
+            . csrf_field()
+            . '<button type="submit" class="uk-button uk-button-secondary uk-button-small uk-margin-small-top uk-margin-auto">'
+            . $text
+            . '</button></form>';
+    }
+
     public function addToFavourites(string $movie_id)
     {
         $movie = Movie::fromHashId($movie_id);
-        dd($movie);
-        back();
+        $user = Auth::user();
+
+
+        $playlist = $user->favourites;
+        $playlist->movies()->attach($movie);
+        $playlist->updateOrFail();
+        // dd($movie);
+        return back()->with('status.success', 'Added to favourites!' . $this->getUndoForm(route('movie.unfav', ['id' => $movie_id])));
+    }
+    public function removeFromFavourites(string $movie_id)
+    {
+        $movie = Movie::fromHashId($movie_id);
+        $user = Auth::user();
+
+
+        $playlist = $user->favourites;
+        $playlist->movies()->detach($movie);
+        $playlist->updateOrFail();
+        // dd($movie);
+        return back()->with('status.info', 'Removed from favourites!' . $this->getUndoForm(route('movie.fav', ['id' => $movie_id])));
     }
 
     public function removeFromRecommendations(string $movie_id)
     {
         $movie = Movie::fromHashId($movie_id);
-        dd($movie);
-        back();
+        $user = Auth::user();
+
+        $playlist = $user->ignored;
+        $playlist->movies()->attach($movie);
+        $playlist->updateOrFail();
+        // dd($movie);
+        return back()->with('status.info', 'Added to ignored!' . $this->getUndoForm(route('movie.unban', ['id' => $movie_id])));
+    }
+
+    public function addToRecommendations(string $movie_id)
+    {
+        $movie = Movie::fromHashId($movie_id);
+        $user = Auth::user();
+
+        $playlist = $user->ignored;
+        $playlist->movies()->detach($movie);
+        $playlist->updateOrFail();
+        // dd($movie);
+        return back()->with('status.info', 'Removed from ignored!' . $this->getUndoForm(route('movie.ban', ['id' => $movie_id])));
     }
 
     public function getThumbnail(string $movie_id)
     {
         $movie = Movie::fromHashId($movie_id);
-//        return response()->download($movie->image->filename);
-//        back();
+        //        return response()->download($movie->image->filename);
+        //        back();
+    }
+
+    public function getThumbnailComponent(Request $request)
+    {
+        $movie = Movie::fromHashId($request->id);
+
+        return view('components.movie.thumbnail', ['movie' => $movie, "attributes" => new \Illuminate\View\ComponentAttributeBag(), 'overlay' => !!$request->overlay]);
     }
 }

@@ -34,7 +34,8 @@ class Movie extends Model
         "year",
         "rating",
         "rating_count",
-        "description"
+        "description",
+        "video"
     ];
 
     public function genre()
@@ -57,7 +58,10 @@ class Movie extends Model
         $data = $this->toArray();
         $data['hashid'] = $this->hashid();
         return $data;
+    }
 
+    public function getThumbnailUrl()
+    {
+        return $this->image->filename;
     }
 }
-

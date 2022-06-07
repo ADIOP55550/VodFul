@@ -1,12 +1,26 @@
-<div class="uk-inline uk-dark uk-visible-toggle uk-animation-toggle">
+<div {{ $attributes->merge(['class'=>'uk-inline uk-dark uk-visible-toggle uk-animation-toggle ']) }}>
+    {{-- @once
+    @push('scripts')
+    <script>
+        function handleFavClick(ev){
+            debugger;
+            axios.post(ev.target.href).then(v=>{
+                console.log(v);
+            });
+            return false;
+        }
+    </script>
+    @endpush
+    @endonce --}}
+
+
     @can('viewAny', \App\Models\Movie::class)
     <img loading="lazy" src="/images/thumbnails/movie{{Illuminate\Support\Str::padLeft($movie->id,3,'0')}}.jpg"
-        width="200" style="aspect-ratio: 2/3" class="uk-height-medium" alt="">
+        style="aspect-ratio: 2/3" class="uk-height-medium" alt="">
     @if($overlay)
     <div
         class="uk-overlay-primary uk-position-cover uk-invisible-hover uk-animation-fade uk-animation-fast uk-hidden-touch">
         <div class="uk-position-top uk-height-1-1">
-            {{-- TODO: PAYMENT REDIRECT --}}
 
             <a href="
                     @guest
@@ -15,7 +29,7 @@
                         @can('watch', $movie)
                             {{route('movie.show', ['movie'=>$movie->hashid()])}}
                         @else
-                            {{(route('profile') . '#choose-plan')}}
+                            {{(route('profile.index') . '#choose-plan')}}
                         @endcan
                     @endguest
                     " class="uk-text-decoration-none">
@@ -27,18 +41,34 @@
                 <span uk-icon="icon: play-circle; ratio: 2"
                     class="uk-text-center uk-width-1-1 uk-margin-small-top"></span>
                 @else
-                <span uk-icon="icon: lock; ratio: 2" class="uk-text-center uk-width-1-1 uk-margin-small-top"></span>
+                <span uk-icon="icon: lock; ratio: 2"
+                    uk-tooltip="title: @guest Log in to watch @else Choose a plan to watch @endguest;pos: bottom; delay: 200"
+                    class="uk-text-center uk-width-1-1 uk-margin-small-top"></span>
                 @endcan
             </a>
 
             <div style="pointer-events: none"
                 class="uk-position-bottom uk-flex uk-flex-between uk-width-1-1 uk-margin-small-bottom uk-padding-small">
-                <a style="pointer-events: all" href="{{route('movie.ban' , ['id'=>$movie->hashid()]) }}"
-                    uk-icon="icon: ban" uk-tooltip="Nie interesuje mnie to">
-                </a>
-                <a style="pointer-events: all" href="{{route('movie.fav' , ['id'=>$movie->hashid()]) }}"
-                    uk-icon="icon: plus" uk-tooltip="Dodaj do mojej listy">
-                </a>
+                <form method="POST" action="{{route('movie.ban', ['id'=>$movie->hashid()])}}">
+                    @csrf
+                    <button style="pointer-events: all" uk-icon="icon: ban" uk-tooltip="Nie interesuje mnie to">
+                    </button>
+                </form>
+                @if(Auth::hasUser() && Auth::user()->favourites->movies->contains($movie))
+                <form method="POST" action="{{route('movie.unfav', ['id'=>$movie->hashid()])}}">
+                    @csrf
+                    <button style="pointer-events: all" type="submit" uk-icon="icon: minus"
+                        uk-tooltip="Usuń z mojej listy">
+                    </button>
+                </form>
+                @else
+                <form method="POST" action="{{route('movie.fav', ['id'=>$movie->hashid()])}}">
+                    @csrf
+                    <button style="pointer-events: all" type="submit" uk-icon="icon: plus"
+                        uk-tooltip="Dodaj do mojej listy">
+                    </button>
+                </form>
+                @endif
             </div>
         </div>
     </div>
@@ -57,8 +87,8 @@
                     <h2 class="uk-modal-title">{{$movie->title}}</h2>
                 </div>
                 <div class="uk-modal-body">
-                    <img loading="lazy" class="uk-align-center uk-height-max-medium"
-                        src="/images/thumbnails/movie{{Illuminate\Support\Str::padLeft($movie->id,3,'0')}}.jpg" alt="">
+                    <img loading="lazy" class="uk-align-center uk-height-max-medium" src="{{$movie->getThumbnailUrl()}}"
+                        alt="">
                     <p>{{$movie->description}}</p>
                 </div>
                 <div class="uk-modal-footer uk-text-right uk-background-secondary">
@@ -69,13 +99,14 @@
                         type="button">Watch
                         <span class="uk-margin-small-right" uk-icon="play"></span></a>
                     @else
-                    <a href="{{route('profile') . '#choose-plan'}}" class="uk-button uk-button-primary"
-                        type="button">Choose
+                    <a href="{{route('profile.index') . '#choose-plan'}}" class="uk-button uk-button-primary"
+                        type="button" uk-tooltip="title: Choose a plan to watch;pos: bottom; delay: 500">Choose
                         a plan to watch
                         <span class="uk-margin-small-right" uk-icon="lock"></span></a>
                     @endcan
                     @else
-                    <a href="{{route('login')}}" class="uk-button uk-button-primary" type="button">
+                    <a href="{{route('login')}}" class="uk-button uk-button-primary"
+                        uk-tooltip="title: Log in to watch;pos: bottom; delay: 500" type="button">
                         <span class="uk-margin-small-right" uk-icon="lock"></span>
                         Log in to watch
                     </a>
