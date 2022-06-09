@@ -16,6 +16,19 @@
     @endpush
 
 
+    @if ($errors->any())
+    <script>
+        @foreach ($errors->all() as $error)
+        UIkit.notification({
+            message: '{!! $error !!}',
+            status: 'danger',
+            pos: 'bottom-right',
+            timeout: 6000
+        });
+        @endforeach
+    </script>
+    @endif
+
     <div class="uk-position-relative">
         <x-login-modal :openLogin="$openLogin ?? false" :openRegister="$openRegister ?? false" />
         <div class="uk-position-top">

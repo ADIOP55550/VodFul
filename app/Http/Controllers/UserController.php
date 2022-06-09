@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
+use Util;
 
 class UserController extends Controller
 {
@@ -50,5 +51,24 @@ class UserController extends Controller
     {
         Auth::user()->createOrGetStripeCustomer();
         return Auth::user()->redirectToBillingPortal(route('profile.index'));
+    }
+
+    public function toggleAdmin(string $id)
+    {
+        $user = Auth::user();
+        $u = User::fromHashId($id);
+
+        if ($u->id == $user->id)
+            abort(409);
+
+        $u->is_admin = !$u->is_admin;
+        $u->update();
+        return back()->with(
+            'status.info',
+            'User '
+                . htmlentities($u->name)
+                . ($u->is_admin ? ' is now an admin' : ' is no longer admin')
+                . $this->getUndoForm(route('admin.users.toggle-admin', ['id' => $id]))
+        );
     }
 }

@@ -77,6 +77,8 @@
                         <button class="uk-button uk-button-secondary uk-width-1-1" type="submit">Log in</button>
 
                     </form>
+                    <a href="{{route('password.request')}}">Forgot password?</a>
+                    <br/>
                     <a href="#register" uk-switcher-item="next">Don't have an account? Register!</a>
                 </li>
                 <li id="register-form-wrapper">

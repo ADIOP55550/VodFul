@@ -8,19 +8,22 @@
             @endif
         </div>
 
+        @if (!$user->isAdmin())
+
         <div class="uk-section uk-section-primary uk-light uk-section-xlarge">
             <div class="uk-container">
-                <x-profile.choose-plan-component :user="$user"></x-profile.choose-plan-component>
                 @if ($user->subscription('default'))
                 <div class="uk-width-1-1">
                     <a class="uk-button uk-button-link uk-margin-medium-top uk-margin-medium-bottom uk-margin-auto uk-display-block"
                         href="{{route('profile.manage-subscriptions')}}">Manage
                         Subscription, billing information, download invoices</a>
                 </div>
-
+                @else
+                <x-profile.choose-plan-component :user="$user"></x-profile.choose-plan-component>
                 @endif
             </div>
         </div>
+        @endif
 
         <div class="uk-section uk-section-secondary uk-light">
             <div class="uk-container">

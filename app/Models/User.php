@@ -23,6 +23,8 @@ use function Illuminate\Events\queueable;
  */
 class User extends Authenticatable
 {
+    static $HASHIDS_NUMBER = 5;
+
     use HasApiTokens, HasFactory, Notifiable, Hashids, Billable;
 
     protected static function booted()
@@ -67,6 +69,7 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'trial_ends_at' => 'datetime',
     ];
 
     public function isAdmin()
@@ -112,5 +115,16 @@ class User extends Authenticatable
         $ws->times_watched += 1;
         $ws->last_watched = now();
         $ws->update();
+    }
+
+    public function getPlan()
+    {
+        $plan = null;
+        if ($this->subscribed('default')) {
+            $prod_id = $this->subscription('default')->items[0]->stripe_product;
+            if ($prod_id)
+                $plan = Plan::withTrashed()->where('stripe_product_id', $prod_id)->first()->name;
+        }
+        return $plan;
     }
 }

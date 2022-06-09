@@ -18,8 +18,10 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
 
-            $table->string('name', 30);
-            $table->string('slug', 30);
+            $table->string('name', 30)->nullable();
+            // $table->string('slug', 30);
+            $table->integer('order');
+            $table->boolean('active');
             // $table->string('price_monthly_id', 255)->collation('utf8_bin');
             // $table->string('price_yearly_id', 255)->collation('utf8_bin');
             $table->string('stripe_product_id', 255)->collation('utf8_bin');

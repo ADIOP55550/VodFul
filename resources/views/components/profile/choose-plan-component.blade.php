@@ -1,8 +1,6 @@
-@if($user->subscribed("default"))
-<h3>
-    Your plan: @dump($user->subscription('default'))
-</h3>
-@else
+@if(!$user->subscribed("default"))
+@if(!$user->isAdmin())
+
 <h1 class="uk-margin-top uk-text-center uk-animation-fade" id="choose-plan">
     You have no plan yet, choose your plan and unlock all possibilities:
 </h1>
@@ -12,25 +10,26 @@ $stripe = Laravel\Cashier\Cashier::stripe();
 @endphp
 
 <div class="uk-container uk-container-small">
-    <div class="uk-grid-match uk-margin-top uk-grid-medium uk-child-width-expand" uk-grid
+    <div class="uk-margin-top uk-grid-medium uk-child-width-expand" uk-grid uk-height-match="target: .uk-card-body"
         uk-scrollspy="target: >div; cls: uk-animation-slide-bottom; delay: 200">
-        @foreach(\App\Models\Plan::all() as $plan)
+        @foreach(\App\Models\Plan::query()->where('active', true)->orderBy('order')->get() as $plan)
         @php
         $product = $plan->getStripeProduct();
         $prices = $stripe->prices->search(['query'=>'active:\'true\' AND product:\'' . $product->id .'\'']);
         @endphp
-        <div>
-            <div class="uk-card uk-card-secondary uk-card-body">
-                <h2>{{$product->name}}</h2>
-                <p class="uk-width-3-4">{{$product->description}}</p>
-                @if(count($product->images) > 0)
-                <img class="uk-position-top-right uk-width-1-4 uk-position-small" src="{{$product->images[0]}}">
-                @endif
-                <div class="uk-flex uk-flex-column">
-
+        <div style="max-width: 40em">
+            <div class="uk-card uk-card-secondary">
+                <div class="uk-card-body">
+                    <h2>{{$plan->name ?? $product->name}}</h2>
+                    <p class="uk-width-3-4">{{$product->description}}</p>
+                    @if(count($product->images) > 0)
+                    <img class="uk-position-top-right uk-width-1-4 uk-position-small" src="{{$product->images[0]}}">
+                    @endif
+                </div>
+                <div class="uk-flex uk-flex-column uk-card-footer">
                     @foreach($prices as $price)
                     <a href="{{route('plan.subscribe', ['plan'=>$plan->hashid(), 'interval'=>$price->recurring->interval])}}"
-                        class="uk-button {{$price->id == $product->default_price ? 'uk-button-secondary' : 'uk-button-default'}} uk-margin-top">{{$price->unit_amount/100}}
+                        class="uk-button {{$price->id == $product->default_price ? 'uk-button-secondary' : 'uk-button-default'}} uk-margin-bottom">{{$price->unit_amount/100}}
                         {{strtoupper($price->currency)}}
                         every {{$price->recurring->interval_count != 1 ? $price->recurring->interval_count.' ' :
                         ''}}{{\Illuminate\Support\Str::plural($price->recurring->interval,
@@ -42,6 +41,7 @@ $stripe = Laravel\Cashier\Cashier::stripe();
         @endforeach
     </div>
 </div>
+@endif
 @endif
 
 

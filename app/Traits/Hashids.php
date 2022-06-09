@@ -2,6 +2,7 @@
 
 namespace App\Traits;
 
+use Exception;
 use phpDocumentor\Reflection\Types\ClassString;
 use Spatie\FlareClient\Http\Exceptions\NotFound;
 
@@ -31,6 +32,10 @@ trait Hashids
             return new \Error("Wrong Magic number");
         }
 
+        try {
+            return parent::withTrashed()->findOrFail($id);
+        } catch (Exception) {
+        }
         return parent::query()->findOrFail($id);
     }
 
@@ -47,8 +52,8 @@ trait Hashids
     }
 
 
-//    public function getHashidAtribute()
-//    {
-//        return $this->hashid();
-//    }
+    //    public function getHashidAtribute()
+    //    {
+    //        return $this->hashid();
+    //    }
 }

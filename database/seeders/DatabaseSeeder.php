@@ -127,7 +127,7 @@ class DatabaseSeeder extends Seeder
         {
             $proPlan = Plan::factory()->state([
                 "name" => "Pro plan",
-                "slug" => "pro-plan",
+                // "slug" => "pro-plan",
                 // "price_monthly_id" => 'price_1L6YAeDvJjMMwBvKlcq9t1yv',
                 // "price_yearly_id" => 'price_1L6YAeDvJjMMwBvKzOFTmzx9',
                 "stripe_product_id" => "prod_LoAVFfDYT2M9aS",
@@ -135,7 +135,7 @@ class DatabaseSeeder extends Seeder
 
             $basicPlan = Plan::factory()->state([
                 "name" => "Basic plan",
-                "slug" => "basic-plan",
+                // "slug" => "basic-plan",
                 // "price_monthly_id" => 'price_1L6Y9GDvJjMMwBvKNeLwM3WO',
                 // "price_yearly_id" => 'price_1L6Y9GDvJjMMwBvKPWZBlUFs',
                 "stripe_product_id" => "prod_LoAUF1JkLLk2GY",
@@ -179,7 +179,7 @@ class DatabaseSeeder extends Seeder
         }
 
 
-        // watched movies
+        // users watched movies
         for ($i = 0; $i < 20; $i++) {
             $user = User::factory()
                 ->for(
@@ -235,7 +235,7 @@ class DatabaseSeeder extends Seeder
             ]);
 
         // unwatched movies
-        for ($i = 0; $i < 300; $i++)
+        for ($i = 0; $i < 250-20; $i++)
             Movie::factory()
                 ->state([
                     'video' => 'yt:' . Arr::random($songs)

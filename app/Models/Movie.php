@@ -53,6 +53,11 @@ class Movie extends Model
         return $this->hasOne(Image::class);
     }
 
+    public function watchedBy()
+    {
+        return $this->hasMany(WatchStatus::class);
+    }
+
     public function toPageValue()
     {
         $data = $this->toArray();

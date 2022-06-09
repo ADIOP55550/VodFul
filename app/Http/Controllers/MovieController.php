@@ -93,16 +93,6 @@ class MovieController extends Controller
         //
     }
 
-    private function getUndoForm(string $route, string $text = "undo", string $method = 'post')
-    {
-        return '<form method="' . $method
-            . '" action="' . $route . '">'
-            . csrf_field()
-            . '<button type="submit" class="uk-button uk-button-secondary uk-button-small uk-margin-small-top uk-margin-auto">'
-            . $text
-            . '</button></form>';
-    }
-
     public function addToFavourites(string $movie_id)
     {
         $movie = Movie::fromHashId($movie_id);

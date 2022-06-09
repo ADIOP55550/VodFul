@@ -9,49 +9,56 @@
 
 <body>
 
-    <div class="uk-position-z-index uk-position-a">
-
-        @if (session('status.success'))
-        <script>
-            UIkit.notification({
+    @if (session('status.success'))
+    <script>
+        UIkit.notification({
                 message: '{!! session("status.success") !!}',
                 status: 'success',
-                pos: 'top-right',
+                pos: '{{request()->is("admin*") ? "bottom-right" : "top-right"}}',
                 timeout: 6000
             });
-        </script>
-        @endif
-        @if (session('status.info'))
-        <script>
-            UIkit.notification({
+    </script>
+    @endif
+    @if (session('status') && gettype(session('status')) == 'string')
+    <script>
+        UIkit.notification({
+                message: '{!! session("status") !!}',
+                status: 'primary',
+                pos: '{{request()->is("admin*") ? "bottom-right" : "top-right"}}',
+                timeout: 6000
+            });
+    </script>
+    @endif
+    @if (session('status.info'))
+    <script>
+        UIkit.notification({
                 message: '{!! session("status.info") !!}',
                 status: 'primary',
-                pos: 'top-right',
+                pos: '{{request()->is("admin*") ? "bottom-right" : "top-right"}}',
                 timeout: 6000
             });
-        </script>
-        @endif
-        @if (session('status.warning'))
-        <script>
-            UIkit.notification({
+    </script>
+    @endif
+    @if (session('status.warning'))
+    <script>
+        UIkit.notification({
                 message: '{!! session("status.warning") !!}',
                 status: 'warning',
-                pos: 'top-right',
+                pos: '{{request()->is("admin*") ? "bottom-right" : "top-right"}}',
                 timeout: 6000
             });
-        </script>
-        @endif
-        @if (session('status.error'))
-        <script>
-            UIkit.notification({
+    </script>
+    @endif
+    @if (session('status.error'))
+    <script>
+        UIkit.notification({
                 message: '{!! session("status.error") !!}',
                 status: 'danger',
-                pos: 'top-right',
+                pos: '{{request()->is("admin*") ? "bottom-right" : "top-right"}}',
                 timeout: 6000
             });
-        </script>
-        @endif
-    </div>
+    </script>
+    @endif
 
     {{$slot}}
 </body>

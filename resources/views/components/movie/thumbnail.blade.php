@@ -49,23 +49,23 @@
 
             <div style="pointer-events: none"
                 class="uk-position-bottom uk-flex uk-flex-between uk-width-1-1 uk-margin-small-bottom uk-padding-small">
-                <form method="POST" action="{{route('movie.ban', ['id'=>$movie->hashid()])}}">
+                {{-- <form method="POST" action="{{route('movie.ban', ['id'=>$movie->hashid()])}}">
                     @csrf
                     <button style="pointer-events: all" uk-icon="icon: ban" uk-tooltip="Nie interesuje mnie to">
                     </button>
-                </form>
+                </form> --}}
                 @if(Auth::hasUser() && Auth::user()->favourites->movies->contains($movie))
                 <form method="POST" action="{{route('movie.unfav', ['id'=>$movie->hashid()])}}">
                     @csrf
                     <button style="pointer-events: all" type="submit" uk-icon="icon: minus"
-                        uk-tooltip="Usuń z mojej listy">
+                        uk-tooltip="Remove from favourites">
                     </button>
                 </form>
                 @else
                 <form method="POST" action="{{route('movie.fav', ['id'=>$movie->hashid()])}}">
                     @csrf
                     <button style="pointer-events: all" type="submit" uk-icon="icon: plus"
-                        uk-tooltip="Dodaj do mojej listy">
+                        uk-tooltip="Add to favourites">
                     </button>
                 </form>
                 @endif
@@ -92,7 +92,23 @@
                     <p>{{$movie->description}}</p>
                 </div>
                 <div class="uk-modal-footer uk-text-right uk-background-secondary">
-                    <button class="uk-button uk-button-default uk-modal-close" type="button">Close</button>
+                    @if(Auth::hasUser() && Auth::user()->favourites->movies->contains($movie))
+                    <form method="POST" action="{{route('movie.unfav', ['id'=>$movie->hashid()])}}">
+                        @csrf
+                        <button style="pointer-events: all" type="submit" uk-icon="icon: minus"
+                            uk-tooltip="Remove from favourites">
+                        </button>
+                    </form>
+                    @else
+                    <form method="POST" action="{{route('movie.fav', ['id'=>$movie->hashid()])}}">
+                        @csrf
+                        <button style="pointer-events: all" type="submit" uk-icon="icon: plus"
+                            uk-tooltip="Add to favourites">
+                        </button>
+                    </form>
+                    @endif
+
+                    <button class="uk-button uk-button-default uk-modal-close uk-margin-medium-left" type="button">Close</button>
                     @can('view', $movie)
                     @can('watch', $movie)
                     <a href="{{route('movie.show', ['movie'=>$movie->hashid()])}}" class="uk-button uk-button-primary"

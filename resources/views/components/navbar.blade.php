@@ -30,18 +30,31 @@
             </div>
         </div>
         <a class="uk-navbar-item uk-logo" href="#">
-            <img src="/images/logo/logo.svg" alt="logo" width="70px">
+            <img src="{{asset('/images/logo/logo.svg')}}" alt="logo" width="70px">
         </a>
         <div class="uk-navbar-center-right">
             <div>
-                {{-- @dump(\Illuminate\Support\Facades\Auth::user())--}}
-                {{-- @dump(\Illuminate\Support\Facades\Auth::hasUser())--}}
                 <ul class="uk-navbar-nav">
-                    @if(\Illuminate\Support\Facades\Auth::check())
-                    <li><a href="/profile">Profil</a></li>
-                    <li><a href="/logout">Log out</a></li>
+                    @if(Auth::check())
+                    <li>
+                        <a href="{{route('profile.index')}}">Profil</a>
+                        <div class="uk-width-large uk-background-secondary uk-light" uk-dropdown>
+                            <div>
+                                Logged in as
+                                {{Auth::user()->name}}
+                                @if(Auth::user()->isAdmin())
+                                (Administrator)
+                                @endif
+                            </div>
+                        </div>
+                    </li>
+
+                    <li><a href="{{route('logout')}}">Logout</a></li>
+                    @if(Auth::user()->isAdmin())
+                    <li><a href="{{route('admin.index')}}">Admin</a></li>
+                    @endif
                     @else
-                    <li><a href="/login" onclick="openLoginModal(); return false;">Login</a></li>
+                    <li><a href="{{route('login')}}" onclick="openLoginModal(); return false;">Login</a></li>
                     @endif
                 </ul>
             </div>

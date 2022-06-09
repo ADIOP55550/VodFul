@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string("title", 100);
             $table->year("year");
             $table->float("rating")->nullable()->default(null);
-            $table->integer("rating_count")->default(null);
+            $table->integer("rating_count")->nullable()->default(null);
             $table->string('video', 255);
             $table->foreignIdFor(\App\Models\Genre::class)->nullable()->default(null)->constrained()->nullOnDelete()->cascadeOnUpdate();
             $table->foreignIdFor(\App\Models\Image::class)->nullable()->default(null)->constrained()->nullOnDelete()->cascadeOnUpdate();

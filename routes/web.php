@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\AdminMovieController;
+use App\Http\Controllers\AdminPlanController;
+use App\Http\Controllers\AdminUserController;
 use App\Http\Controllers\GenreController;
 use App\Http\Controllers\MovieController;
 use App\Http\Controllers\UserController;
@@ -52,5 +55,16 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::get('/', function () {
         return view("admin.index");
     })->name('index');
+    // Route::get('/users', function () {
+    //     return view("admin.users");
+    // })->name('users');
+    Route::resource('users', AdminUserController::class);
+    Route::resource('movies', AdminMovieController::class);
+    Route::resource('plans', AdminPlanController::class);
+    Route::post('/users/{id}/toggle-admin', [UserController::class, 'toggleAdmin'])->name('users.toggle-admin');
+    Route::post('/plans/reorder', [AdminPlanController::class, 'reorder'])->name('plans.reorder');
+    Route::post('/plans/{id}/restore', [AdminPlanController::class, 'restore'])->name('plans.restore');
+    Route::post('/plans/{id}/toggle-visibility', [AdminPlanController::class, 'toggleVisibility'])->name('plans.toggle-visibility');
+
     // Route::resource('users', UserController::class);
 });

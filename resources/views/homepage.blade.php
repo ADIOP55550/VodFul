@@ -5,7 +5,17 @@
         <div class="uk-width-1-2@m uk-width-4-5@l uk-margin-auto uk-margin-auto-vertical">
             <h1 class=" uk-text-left">Jump into
                 action!</h1>
-            <a class="uk-button uk-button-default">Open</a>
+            @guest
+            <a href="{{route('register')}}" class="uk-button uk-button-default">Create an account!</a>
+            @else
+            @if(Auth::user()->subscribed() || Auth::user()->isAdmin())
+            <a href="{{route('movie.show', ['movie'=>App\Models\Movie::query()->inRandomOrder()->first()->hashid()])}}"
+                class="uk-button uk-button-default">Random movie!</a>
+            @else
+            <a href="{{route('profile.index') . '#choose-plan'}}" class="uk-button uk-button-default">Choose yor
+                plan!</a>
+            @endif
+            @endguest
         </div>
     </div>
 
@@ -14,33 +24,52 @@
             uk-slideshow="ratio: 7:3; animation: pull; autoplay: true; autoplay-interval: 10000">
 
             <ul class="uk-slideshow-items" uk-height-viewport="offset-top: true; offset-bottom:30">
-                @for ($i = 1; $i < 6; $i++) <li>
+                @foreach (App\Models\Movie::query()->inRandomOrder()->take(6)->get() as $movie)
+                <li>
                     <div
                         class="uk-position-cover uk-animation-kenburns uk-animation-reverse uk-transform-origin-center-left">
-                        <img src="/images/slide0{{ $i }}.jpg" alt="" uk-cover loading="lazy">
+                        <img src="/images/slide0{{ $loop->index + 1 }}.jpg" alt="" uk-cover loading="lazy">
                     </div>
                     <div
                         class="uk-overlay uk-overlay-primary uk-position-bottom-left uk-position-small uk-transition-slide-bottom">
-                        <h3 class="uk-margin-remove">Film title {{ $i }}</h3>
-                        <p class="uk-margin-remove">Film description. Lorem ipsum dolor sit amet,<br />consectetur
-                            adipisicing
-                            elit. Accusamus consequatur eius.</p>
+                        <h3 class="uk-margin-remove">{{$movie->title}}</h3>
+                        <p class="uk-margin-remove">{{$movie->description}}</p>
                         <div class="uk-flex-row uk-margin-small-top">
-                            <a href="" class="uk-margin-small-left uk-icon-button uk-button-secondary uk-light"
-                                uk-icon="play-circle" uk-tooltip="title:Odtwórz; pos: bottom-left; delay: 300"></a>
-                            <a href="" class="uk-margin-left uk-icon-link" uk-icon="plus"
-                                uk-tooltip="title:Dodaj do mojej listy; pos: bottom-left; delay: 300"></a>
-                            <a href="" class="uk-margin-left uk-icon-link" uk-icon="ban"
-                                uk-tooltip="title:Nie interesuje mnie to; pos: bottom-left; delay: 300"></a>
+                            @guest
+                            <a href="{{route('login')}}"
+                                class="uk-margin-small-left uk-icon-button uk-button-secondary uk-light" uk-icon="lock"
+                                uk-tooltip="title:Log in to watch; pos: bottom-left; delay: 300"></a>
+                            @else
+                            <a href="{{route('movie.show', ['movie'=>$movie->hashid()])}}"
+                                class="uk-margin-small-left uk-icon-button uk-button-secondary uk-light"
+                                uk-icon="play-circle" uk-tooltip="title:Watch; pos: bottom-left; delay: 300"></a>
 
-
-                            <!--                <a href="" class="uk-margin-small-right uk-icon-button uk-light" uk-icon="heart"></a>-->
-                            <!--                <a href="" class="uk-margin-small-right uk-button-danger uk-icon-button uk-light" uk-icon="minus-circle"></a>-->
+                            @if(Auth::hasUser() && Auth::user()->favourites->movies->contains($movie))
+                            <form method="POST" class="uk-inline"
+                                action="{{route('movie.unfav', ['id'=>$movie->hashid()])}}">
+                                @csrf
+                                <button class="uk-margin-left uk-icon-link" type="submit" uk-icon="icon: minus"
+                                    uk-tooltip="Remove from favourites">
+                                </button>
+                            </form>
+                            @else
+                            <form method="POST" class="uk-inline"
+                                action="{{route('movie.fav', ['id'=>$movie->hashid()])}}">
+                                @csrf
+                                <button class="uk-margin-left uk-icon-link" type="submit" uk-icon="icon: plus"
+                                    uk-tooltip="Add to favourites">
+                                </button>
+                            </form>
+                            @endif
+                            {{-- <a href="{{route('movie.fav', ['id'=>$movie->hashid()])}}"
+                                class="uk-margin-left uk-icon-link" uk-icon="plus"
+                                uk-tooltip="title:Add to favoutrites; pos: bottom-left; delay: 300"></a> --}}
+                            @endguest
 
                         </div>
                     </div>
-                    </li>
-                    @endfor
+                </li>
+                @endforeach
             </ul>
 
             <div class="uk-position-bottom-center uk-position-small">
@@ -56,7 +85,8 @@
             <h2>Najbardziej lubiane:</h2>
             @php
             $movies = \App\Models\Movie::query()
-            ->inRandomOrder()
+            ->withSum('watchedBy', 'times_watched')
+            ->orderByDesc('watched_by_sum_times_watched')
             ->take(20)
             ->get();
             @endphp
@@ -92,6 +122,71 @@
 
 
             </div>
+
+            @if(Auth::hasUser() && (Auth::user()->subscribed() || Auth::user()->isAdmin()))
+
+            <h2>Na podstawie tego, co oglądasz:</h2>
+
+            @php
+            $statuses = Auth::user()->watchStatuses()->with('movie','movie.genre')->get();
+            $picks = [];
+            if($statuses->count() > 0) {
+
+            // get top two genre IDs (with movies watched most times)
+            $top_genres = array_slice(array_keys(array_count_values(
+            array_map(
+            fn($m)=>$m['genre']['id'],
+            array_map(
+            fn($ws)=>$ws['movie'],
+            Illuminate\Support\Arr::sort(
+            $statuses->toArray(),
+            fn($s)=>-$s['times_watched']
+            )
+            )
+            )
+            )),0,2);
+
+
+            $picks = \App\Models\Movie::query()
+            ->whereIn('genre_id', $top_genres)
+            ->inRandomOrder()
+            ->take(20)
+            ->get();
+
+            }
+            @endphp
+
+            <div uk-slider>
+                <div class="uk-position-relative">
+                    <div class="uk-slider-container">
+                        <ul class="uk-slider-items uk-grid uk-grid-gap-small">
+                            @foreach ($picks as $movie)
+                            <li class="uk-position-relative">
+                                <x-movie.thumbnail :movie="$movie"> </x-movie.thumbnail>
+                            </li>
+                            @endforeach
+                        </ul>
+                    </div>
+
+
+                    <div class="uk-hidden@s uk-light">
+                        <a class="uk-position-center-left uk-position-small" href="#" uk-slidenav-previous
+                            uk-slider-item="previous"></a>
+                        <a class="uk-position-center-right uk-position-small" href="#" uk-slidenav-next
+                            uk-slider-item="next"></a>
+                    </div>
+
+                    <div class="uk-visible@s">
+                        <a class="uk-position-center-left-out uk-position-small" href="#" uk-slidenav-previous
+                            uk-slider-item="previous"></a>
+                        <a class="uk-position-center-right-out uk-position-small" href="#" uk-slidenav-next
+                            uk-slider-item="next"></a>
+                    </div>
+                </div>
+
+
+            </div>
+            @endif
         </div>
 
 
