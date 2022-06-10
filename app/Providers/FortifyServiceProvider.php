@@ -36,7 +36,6 @@ class FortifyServiceProvider extends ServiceProvider
         Fortify::updateUserPasswordsUsing(UpdateUserPassword::class);
         Fortify::resetUserPasswordsUsing(ResetUserPassword::class);
 
-
         RateLimiter::for('login', function (Request $request) {
             $email = (string)$request->email;
 
@@ -58,6 +57,12 @@ class FortifyServiceProvider extends ServiceProvider
         });
         Fortify::registerView(function () {
             return view('homepage', ['openRegister' => true]);
+        });
+        Fortify::verifyEmailView(function () {
+            return view('profile.verify-email');
+        });
+        Fortify::confirmPasswordView(function () {
+            return view('auth.confirm-password');
         });
     }
 }

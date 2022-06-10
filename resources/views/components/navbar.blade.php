@@ -5,9 +5,9 @@
         <div class="uk-navbar-center-left">
             <div>
                 <ul class="uk-navbar-nav">
-                    <li><a href="{{route('homepage')}}">Główna</a></li>
+                    <li><a href="{{route('homepage')}}">Home</a></li>
                     <li>
-                        <a href="{{route('genres.index')}}">Gatunki</a>
+                        <a href="{{route('genres.index')}}">Genres</a>
                         <div class="uk-navbar-dropdown uk-navbar-dropdown-width-2 uk-background-secondary">
                             <div class="uk-navbar-dropdown-grid uk-child-width-1-2" uk-grid>
                                 @php($allGenres = collect(\App\Models\Genre::all()))
@@ -37,7 +37,7 @@
                 <ul class="uk-navbar-nav">
                     @if(Auth::check())
                     <li>
-                        <a href="{{route('profile.index')}}">Profil</a>
+                        <a href="{{route('profile.index')}}">Profile</a>
                         <div class="uk-width-large uk-background-secondary uk-light" uk-dropdown>
                             <div>
                                 Logged in as
@@ -55,6 +55,8 @@
                     @endif
                     @else
                     <li><a href="{{route('login')}}" onclick="openLoginModal(); return false;">Login</a></li>
+                    <li><a href="{{route('register')}}" onclick="openRegisterModal(); return false;">Register</a></li>
+
                     @endif
                 </ul>
             </div>
@@ -74,7 +76,7 @@
                 <li class="uk-active"><a href="#offcanvas-nav" uk-toggle>
                         <span uk-icon="menu"></span>
                     </a></li>
-                <li><a href="{{route('homepage')}}">Główna</a></li>
+                <li><a href="{{route('homepage')}}">Home</a></li>
             </ul>
 
         </div>
@@ -85,10 +87,10 @@
 <div id="offcanvas-nav" class="uk-hidden@m" uk-offcanvas="mode: push; overlay: true">
     <div class="uk-offcanvas-bar">
         <ul class="uk-nav uk-nav-primary uk-nav-parent-icon" uk-nav>
-            <li><a href="{{route('homepage')}}">Główna</a></li>
+            <li><a href="{{route('homepage')}}">Home</a></li>
             <li
                 class="uk-parent {{ request()->routeIs('genres.index') || request()->routeIs('genres.show') ? 'uk-open' : ''}}">
-                <a href="#">Gatunki</a>
+                <a href="#">Genres</a>
                 <ul class="uk-nav-sub">
                     @php($genres = collect(\App\Models\Genre::all()))
                     @foreach($genres as $genre)
@@ -99,12 +101,16 @@
                 </ul>
             </li>
 
-            <li class="uk-nav-header">Użytkownik</li>
+            <li class="uk-nav-header">User</li>
             @if(\Illuminate\Support\Facades\Auth::check())
-            <li><a href="/profile">Profil</a></li>
-            <li><a href="/logout">Log out</a></li>
+            <li><a href="{{route('profile.index')}}">Profile</a></li>
+            <li><a href="{{route('logout')}}">Logout</a></li>
+            @if(Auth::user()->isAdmin())
+            <li><a href="{{route('admin.index')}}">Admin</a></li>
+            @endif
             @else
-            <li><a href="/login" onclick="openLoginModal(); return false;">Login</a></li>
+            <li><a href="{{route('login')}}" onclick="openLoginModal(); return false;">Login</a></li>
+            <li><a href="{{route('register')}}" onclick="openRegisterModal(); return false;">Register</a></li>
             @endif
         </ul>
     </div>

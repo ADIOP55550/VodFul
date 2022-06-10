@@ -37,8 +37,19 @@ class MoviePolicy
     public function view(User $user, Movie $movie)
     {
         // return true, user must be logged in
-        // TODO: add plan checking ??
         return true;
+    }
+
+
+    /**
+     * Determine whether the user can watch any movie.
+     *
+     * @param \App\Models\User $user
+     * @return \Illuminate\Auth\Access\Response|bool
+     */
+    public function watchAnyMovie(User $user)
+    {
+        return $user->subscribed();
     }
 
 
@@ -51,8 +62,7 @@ class MoviePolicy
      */
     public function watch(User $user, Movie $movie)
     {
-//        return true;
-        return $user->subscribed('default');
+        return $user->subscribed();
     }
 
     /**

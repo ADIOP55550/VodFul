@@ -127,17 +127,11 @@ class DatabaseSeeder extends Seeder
         {
             $proPlan = Plan::factory()->state([
                 "name" => "Pro plan",
-                // "slug" => "pro-plan",
-                // "price_monthly_id" => 'price_1L6YAeDvJjMMwBvKlcq9t1yv',
-                // "price_yearly_id" => 'price_1L6YAeDvJjMMwBvKzOFTmzx9',
                 "stripe_product_id" => "prod_LoAVFfDYT2M9aS",
             ])->create();
 
             $basicPlan = Plan::factory()->state([
                 "name" => "Basic plan",
-                // "slug" => "basic-plan",
-                // "price_monthly_id" => 'price_1L6Y9GDvJjMMwBvKNeLwM3WO',
-                // "price_yearly_id" => 'price_1L6Y9GDvJjMMwBvKPWZBlUFs',
                 "stripe_product_id" => "prod_LoAUF1JkLLk2GY",
             ])->create();
         }
@@ -218,6 +212,7 @@ class DatabaseSeeder extends Seeder
 
         // Admin user
         User::factory()
+            ->verified()
             ->for(
                 Playlist::factory()
                     ->favourites(),
@@ -235,7 +230,7 @@ class DatabaseSeeder extends Seeder
             ]);
 
         // unwatched movies
-        for ($i = 0; $i < 250-20; $i++)
+        for ($i = 0; $i < 250 - 20; $i++)
             Movie::factory()
                 ->state([
                     'video' => 'yt:' . Arr::random($songs)

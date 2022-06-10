@@ -15,7 +15,7 @@
 
 
     @can('viewAny', \App\Models\Movie::class)
-    <img loading="lazy" src="/images/thumbnails/movie{{Illuminate\Support\Str::padLeft($movie->id,3,'0')}}.jpg"
+    <img loading="lazy" src="{{$movie->getThumbnailUrl()}}"
         style="aspect-ratio: 2/3" class="uk-height-medium" alt="">
     @if($overlay)
     <div

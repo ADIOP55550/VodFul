@@ -1,6 +1,6 @@
 <x-layouts.user>
 
-    <div class="uk-margin-xlarge-top uk-margin-bottom uk-container">
+    <div class="uk-margin-xlarge-top uk-margin-bottom uk-container uk-light">
 
         <div class="uk-card uk-margin-auto uk-width-medium">
             <form action="{{route('password.request')}}" method="POST">

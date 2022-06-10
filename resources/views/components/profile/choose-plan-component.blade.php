@@ -10,14 +10,14 @@ $stripe = Laravel\Cashier\Cashier::stripe();
 @endphp
 
 <div class="uk-container uk-container-small">
-    <div class="uk-margin-top uk-grid-medium uk-child-width-expand" uk-grid uk-height-match="target: .uk-card-body"
+    <div class="uk-margin-top uk-grid-column-small uk-child-width-expand" uk-grid
         uk-scrollspy="target: >div; cls: uk-animation-slide-bottom; delay: 200">
         @foreach(\App\Models\Plan::query()->where('active', true)->orderBy('order')->get() as $plan)
         @php
         $product = $plan->getStripeProduct();
         $prices = $stripe->prices->search(['query'=>'active:\'true\' AND product:\'' . $product->id .'\'']);
         @endphp
-        <div style="max-width: 40em">
+        <div>
             <div class="uk-card uk-card-secondary">
                 <div class="uk-card-body">
                     <h2>{{$plan->name ?? $product->name}}</h2>
@@ -28,7 +28,7 @@ $stripe = Laravel\Cashier\Cashier::stripe();
                 </div>
                 <div class="uk-flex uk-flex-column uk-card-footer">
                     @foreach($prices as $price)
-                    <a href="{{route('plan.subscribe', ['plan'=>$plan->hashid(), 'interval'=>$price->recurring->interval])}}"
+                    <a href="{{route('plan.subscribe', ['plan'=>$plan->hashid(), 'priceData'=>encrypt(\Illuminate\Support\Arr::add(\Illuminate\Support\Arr::only($price->recurring->toArray(), ['interval', 'interval_count']),'rand',rand(1,10000)))])}}"
                         class="uk-button {{$price->id == $product->default_price ? 'uk-button-secondary' : 'uk-button-default'}} uk-margin-bottom">{{$price->unit_amount/100}}
                         {{strtoupper($price->currency)}}
                         every {{$price->recurring->interval_count != 1 ? $price->recurring->interval_count.' ' :
@@ -41,6 +41,7 @@ $stripe = Laravel\Cashier\Cashier::stripe();
         @endforeach
     </div>
 </div>
+
 @endif
 @endif
 

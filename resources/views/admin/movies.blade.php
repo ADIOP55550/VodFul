@@ -7,6 +7,11 @@
         $movies = App\Models\Movie::paginate(20);
         // $plans = App\Models\Plan::all();
         @endphp
+
+        <a href="{{route('admin.movies.create')}}" class="uk-button uk-button-primary">
+            Create new movie
+        </a>
+
         {{$movies->links()}}
 
         <table class="uk-table uk-table-middle uk-table-small uk-table-hover uk-table-striped">

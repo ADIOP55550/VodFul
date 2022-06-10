@@ -1,6 +1,6 @@
 <x-layouts.user :openLogin="$openLogin ?? false" :openRegister="$openRegister ?? false">
 
-    <div class="uk-width-1-1 uk-flex uk-background-cover" uk-parallax="bgy: -200, -500;"
+    <div class="uk-width-1-1 uk-flex uk-background-cover uk-light" uk-parallax="bgy: -200, -500;"
         uk-height-viewport="expand:false; offset-bottom: 20" style="background-image: url('/images/hero.jpg');">
         <div class="uk-width-1-2@m uk-width-4-5@l uk-margin-auto uk-margin-auto-vertical">
             <h1 class=" uk-text-left">Jump into
@@ -12,19 +12,19 @@
             <a href="{{route('movie.show', ['movie'=>App\Models\Movie::query()->inRandomOrder()->first()->hashid()])}}"
                 class="uk-button uk-button-default">Random movie!</a>
             @else
-            <a href="{{route('profile.index') . '#choose-plan'}}" class="uk-button uk-button-default">Choose yor
+            <a href="{{route('profile.index') . '#choose-plan'}}" class="uk-button uk-button-default">Choose your
                 plan!</a>
             @endif
             @endguest
         </div>
     </div>
 
-    <div class="uk-container uk-container-xlarge">
+    <div class="uk-container uk-container-xlarge uk-light">
         <div class="uk-position-relative uk-visible-toggle uk-light uk-margin-top" tabindex="-1"
             uk-slideshow="ratio: 7:3; animation: pull; autoplay: true; autoplay-interval: 10000">
 
             <ul class="uk-slideshow-items" uk-height-viewport="offset-top: true; offset-bottom:30">
-                @foreach (App\Models\Movie::query()->inRandomOrder()->take(6)->get() as $movie)
+                @foreach (App\Models\Movie::query()->inRandomOrder()->take(5)->get() as $movie)
                 <li>
                     <div
                         class="uk-position-cover uk-animation-kenburns uk-animation-reverse uk-transform-origin-center-left">
@@ -40,9 +40,15 @@
                                 class="uk-margin-small-left uk-icon-button uk-button-secondary uk-light" uk-icon="lock"
                                 uk-tooltip="title:Log in to watch; pos: bottom-left; delay: 300"></a>
                             @else
+                            @if(Auth::user()->subscribed())
                             <a href="{{route('movie.show', ['movie'=>$movie->hashid()])}}"
                                 class="uk-margin-small-left uk-icon-button uk-button-secondary uk-light"
                                 uk-icon="play-circle" uk-tooltip="title:Watch; pos: bottom-left; delay: 300"></a>
+                            @else
+                            <a href="{{route('profile.index') . '#choose-plan'}}"
+                                class="uk-margin-small-left uk-icon-button uk-button-secondary uk-light" uk-icon="lock"
+                                uk-tooltip="title:Choose a plan to watch; pos: bottom-left; delay: 300"></a>
+                            @endif
 
                             @if(Auth::hasUser() && Auth::user()->favourites->movies->contains($movie))
                             <form method="POST" class="uk-inline"
@@ -81,8 +87,8 @@
                 uk-slidenav-next uk-slideshow-item="next"></a>
         </div>
 
-        <div class="uk-container uk-container-large uk-margin-top">
-            <h2>Najbardziej lubiane:</h2>
+        <div class="uk-container uk-container-large uk-margin-top uk-light">
+            <h2>Top movies:</h2>
             @php
             $movies = \App\Models\Movie::query()
             ->withSum('watchedBy', 'times_watched')
@@ -125,7 +131,7 @@
 
             @if(Auth::hasUser() && (Auth::user()->subscribed() || Auth::user()->isAdmin()))
 
-            <h2>Na podstawie tego, co oglądasz:</h2>
+            <h2>Based on your watch history:</h2>
 
             @php
             $statuses = Auth::user()->watchStatuses()->with('movie','movie.genre')->get();
@@ -160,11 +166,15 @@
                 <div class="uk-position-relative">
                     <div class="uk-slider-container">
                         <ul class="uk-slider-items uk-grid uk-grid-gap-small">
-                            @foreach ($picks as $movie)
+                            @forelse ($picks as $movie)
                             <li class="uk-position-relative">
                                 <x-movie.thumbnail :movie="$movie"> </x-movie.thumbnail>
                             </li>
-                            @endforeach
+                            @empty
+                            <div class="uk-placeholder uk-width-1-1 uk-height-1-1 uk-light uk-text-center">You haven't
+                                watched any movies yet.
+                            </div>
+                            @endforelse
                         </ul>
                     </div>
 

@@ -142,12 +142,6 @@ class MovieController extends Controller
         return back()->with('status.info', 'Removed from ignored!' . $this->getUndoForm(route('movie.ban', ['id' => $movie_id])));
     }
 
-    public function getThumbnail(string $movie_id)
-    {
-        $movie = Movie::fromHashId($movie_id);
-        //        return response()->download($movie->image->filename);
-        //        back();
-    }
 
     public function getThumbnailComponent(Request $request)
     {

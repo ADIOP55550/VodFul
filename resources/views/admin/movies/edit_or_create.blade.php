@@ -5,7 +5,6 @@
 
         @php($route = isset($movie) ? route('admin.movies.update', ['movie'=>$movie->hashid()]) :
         route('admin.movies.store'))
-        @php($movie = $movie??new App\Models\Movie())
 
         <form method="POST" action="{{$route}}" class="uk-width-large@l uk-width-1-1">
             @csrf

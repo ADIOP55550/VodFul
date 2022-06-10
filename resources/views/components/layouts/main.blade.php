@@ -60,6 +60,19 @@
     </script>
     @endif
 
+    @foreach ($errors->all() as $message)
+    <script>
+        UIkit.notification({
+            message: '{{$message}}',
+            status: 'danger',
+            pos: '{{request()->is("admin*") ? "bottom-right" : "top-right"}}',
+            timeout: 6000
+        });
+    </script>
+    @endforeach
+
+
+
     {{$slot}}
 </body>
 

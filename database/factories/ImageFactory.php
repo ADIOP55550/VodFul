@@ -17,11 +17,11 @@ class ImageFactory extends Factory
      */
     public function definition()
     {
-        $h = $this->faker->numberBetween(400, 1000);
-        $w = $this->faker->numberBetween(400, 1000);
+        $h = $this->faker->numberBetween(300, 500);
+        $w = $this->faker->numberBetween(900, 1100);
         return [
             'filename' => $this->faker->imageUrl($w, $h, "movie"),
-            'aspect_ratio' => $w/$h
+            'aspect_ratio' => $w / $h
         ];
     }
 }

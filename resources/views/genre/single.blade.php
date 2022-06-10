@@ -7,7 +7,7 @@
     @endphp
 
 
-    <div class="uk-container uk-margin-large-top">
+    <div class="uk-container uk-margin-large-top uk-light">
         <div class="uk-hidden@m uk-margin-xlarge-top"></div>
         <ul class="uk-breadcrumb uk-margin-top">
             <li><a href="{{route('homepage')}}">Home</a></li>

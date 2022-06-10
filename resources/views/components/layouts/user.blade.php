@@ -27,7 +27,7 @@
             <x-navbar />
         </div>
         <main id="main-container"
-            class="uk-position-top uk-section uk-light uk-padding-remove uk-margin-large-bottom splash-bg uk-height-viewport">
+            class="uk-position-top uk-section uk-padding-remove uk-margin-large-bottom splash-bg uk-height-viewport">
 
             {{ $slot }}
         </main>

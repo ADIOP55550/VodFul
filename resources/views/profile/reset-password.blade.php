@@ -1,6 +1,6 @@
 <x-layouts.user>
 
-    <div class="uk-margin-xlarge-top uk-margin-bottom uk-container">
+    <div class="uk-margin-xlarge-top uk-margin-bottom uk-container uk-light">
 
         <div class="uk-card uk-margin-auto uk-width-medium">
             <div class="uk-margin-top">
@@ -16,16 +16,8 @@
 
             <form action="/reset-password" method="POST">
                 @csrf
-                {{-- <div class="uk-margin">
-                    <label class="uk-form-label" for="email-input">
-                        Email:
-                    </label> --}}
-                    <div class="uk-form-controls">
-                        <input class="uk-input" type="hidden" required id="email-input" name="email"
-                            value="{{ request()->email ?? '' }}" autofocus>
-                    </div>
-                    {{--
-                </div> --}}
+                <input class="uk-input" type="hidden" required id="email-input" name="email"
+                    value="{{ request()->email ?? '' }}" autofocus>
 
                 <div class="uk-margin">
                     <label class="uk-form-label" for="password-input">

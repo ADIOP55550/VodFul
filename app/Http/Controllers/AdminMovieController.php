@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreMovieRequest;
 use App\Http\Requests\UpdateMovieRequest;
 use App\Models\Genre;
+use App\Models\Image;
+use App\Models\Keyword;
 use App\Models\Movie;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
@@ -40,7 +42,23 @@ class AdminMovieController extends Controller
     public function store(StoreMovieRequest $request)
     {
         $valid = $request->validated();
-        Movie::factory()->create($valid);
+
+        $genre = Genre::query()->where('name', Arr::pull($valid, 'genre'))->firstOrFail();
+
+        Movie::factory()->state($valid)
+            ->for(
+                $genre
+            )
+            ->has(
+                Image::factory()
+            )
+            ->has(
+                Keyword::factory()
+                    ->count(random_int(0, 4))
+            )
+            ->create();
+
+
         return to_route('admin.movies.index')->with('status.success', "Movie created");
     }
 

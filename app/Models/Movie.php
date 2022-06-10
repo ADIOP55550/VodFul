@@ -67,6 +67,8 @@ class Movie extends Model
 
     public function getThumbnailUrl()
     {
+        if ($this->id <= 250)
+            return '/images/thumbnails/movie' . \Illuminate\Support\Str::padLeft($this->id, 3, '0') . '.jpg';
         return $this->image->filename;
     }
 }

@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\Fortify\UpdateUserPassword;
 use App\Models\Plan;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
-use Util;
 
 class UserController extends Controller
 {
@@ -18,25 +18,35 @@ class UserController extends Controller
         Gate::authorize('view', $user);
         return view('profile.index', ['user' => $user]);
     }
-
-    public function paymentMethod()
+    public function deleteProfile(Request $request)
     {
-        $user = Auth::user();
-        return view('profile.payment-method', [
-            'intent' => $user->createSetupIntent()
-        ]);
+        if (!$request->is_sure)
+            return back()->with("status.error", "Checkbox was not checked, nothing has been deleted");
+        $user = User::query()->findOrFail(Auth::user()->id);
+        $user->forceDelete();
+        return to_route('homepage');
     }
 
-    public function subscribe(string $plan_id, string $interval)
+    public function updatePassword(UpdateUserPassword $updateUserPassword, Request $request)
+    {
+        $updateUserPassword->update(Auth::user(), $request->all());
+        return to_route('homepage')->with('status.success', 'Password updated!');
+    }
+
+    public function subscribe(string $plan_id, string $priceDataEnc)
     {
         Gate::allowIf(fn ($user) => !!$user);
         $user = Auth::user();
 
-        $plan = Plan::fromHashId($plan_id);
+        $priceData = decrypt($priceDataEnc);
 
+        $plan = Plan::fromHashId($plan_id);
         $prices = $plan->getStripePrices();
 
-        $price = Arr::where($prices->data, fn ($v) => $v->recurring->interval == $interval)[0];
+        $found_prices = Arr::where($prices->data, fn ($v) => ($v->recurring->interval == $priceData['interval']) && ($v->recurring->interval_count == $priceData['interval_count']));
+        $price = head($found_prices);
+
+
 
         return $user->newSubscription(
             'default',
