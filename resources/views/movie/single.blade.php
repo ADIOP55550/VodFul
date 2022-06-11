@@ -44,13 +44,15 @@
 
                 @php
                 $picks = [];
+                $watched_ids = Auth::user()->watchStatuses
+                ->map(fn($ws)=>$ws->movie->id);
+
                 $picks = \App\Models\Movie::query()
                 ->where('genre_id', $movie->genre->id)
+                ->whereNotIn('id', $watched_ids)
                 ->inRandomOrder()
                 ->take(20)
                 ->get();
-
-
                 @endphp
 
                 <div uk-slider>
@@ -63,7 +65,7 @@
                                 </li>
                                 @empty
                                 <div class="uk-placeholder uk-width-1-1 uk-height-1-1 uk-light uk-text-center">No
-                                    similar movies found
+                                    similar unwatched movies found
                                 </div>
                                 @endforelse
                             </ul>

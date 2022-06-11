@@ -15,21 +15,21 @@
             <div class="uk-margin">
                 <label>
                     Title:
-                    <input class="uk-input" type="text" required name="title" id="title-input"
+                    <input class="uk-input" type="text" required minlength="3" name="title" id="title-input"
                         value="{{ old('title', isset($movie) ? $movie->title : '') }}">
                 </label>
             </div>
             <div class="uk-margin">
                 <label>
                     Year:
-                    <input class="uk-input" type="number" min="1800" max="{{now()->year}}" name="year" id="year-input"
-                        value="{{ old('year', isset($movie) ? $movie->year : '') }}">
+                    <input class="uk-input" type="number" required min="1800" max="{{now()->year}}" name="year"
+                        id="year-input" value="{{ old('year', isset($movie) ? $movie->year : '') }}">
                 </label>
             </div>
             <div class="uk-margin">
                 <label>
-                    Video link:
-                    <input class="uk-input" type="url" name="video" id="video-input"
+                    Video link (format yt:ID_YOUTUBE):
+                    <input class="uk-input" type="text" name="video" id="video-input" pattern="^yt:[^\x22&?/\s]{11}$"
                         value="{{ old('video', isset($movie) ? $movie->video : '') }}">
                 </label>
             </div>
@@ -39,8 +39,8 @@
                     <select class="uk-select" name="genre" id="genre-input">
                         <option value="" selected hidden>Choose genre...</option>
                         @foreach (App\Models\Genre::all() as $genre)
-                        <option value="{{$genre->name}}" @selected(isset($movie) && $genre==$movie->
-                            genre)>{{$genre->name}}</option>
+                        <option value="{{$genre->name}}" @selected(old('genre', isset($movie) ? $movie->genre->name :
+                            '') == $genre->name)>{{$genre->name}}</option>
                         @endforeach
                     </select>
                 </label>

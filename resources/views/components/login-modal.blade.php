@@ -50,7 +50,7 @@
                             </label>
                             <div class="uk-inline">
                                 <span class="uk-form-icon" uk-icon="icon: user"></span>
-                                <input class="uk-input" type="text" id="username-input" name="email" autofocus>
+                                <input class="uk-input" type="text" id="username-input" name="email" value="{{old('email')}}" autofocus>
                             </div>
                         </div>
 
@@ -60,7 +60,7 @@
                             </label>
                             <div class="uk-inline">
                                 <span class="uk-form-icon" uk-icon="icon: lock"></span>
-                                <input class="uk-input" id="password-input" name="password" type="password">
+                                <input class="uk-input" id="password-input" value="{{old('password')}}" name="password" type="password">
                             </div>
                         </div>
 
@@ -91,7 +91,7 @@
                                 Full Name:
                             </label>
                             <div class="uk-form-controls">
-                                <input class="uk-input" type="text" required id="full-name-input" name="name" {{
+                                <input class="uk-input" type="text" required id="full-name-input" value="{{old('name')}}" name="name" {{
                                     old('name') }} autofocus>
                             </div>
                         </div>
@@ -100,7 +100,7 @@
                                 Email:
                             </label>
                             <div class="uk-form-controls">
-                                <input class="uk-input" type="email" required id="email-input" name="email" {{
+                                <input class="uk-input" type="email" required id="email-input" value="{{old('email')}}" name="email" {{
                                     old('email') }} autofocus>
                             </div>
                         </div>
@@ -110,7 +110,7 @@
                                 Password:
                             </label>
                             <div class="uk-form-controls">
-                                <input class="uk-input" id="password-input" required name="password" {{ old('password')
+                                <input class="uk-input" id="password-input" required value="{{old('password')}}" name="password" {{ old('password')
                                     }} type="password">
                             </div>
                         </div>

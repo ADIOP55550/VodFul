@@ -19,7 +19,7 @@ return new class extends Migration
             $table->timestamps();
             $table->string("imdb_id", 10)->nullable()->default(null);
             $table->string("title", 100);
-            $table->year("year");
+            $table->unsignedSmallInteger("year");
             $table->float("rating")->nullable()->default(null);
             $table->integer("rating_count")->nullable()->default(null);
             $table->string('video', 255);

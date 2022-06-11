@@ -16,7 +16,7 @@
     @endpush
 
 
-    @if ($errors->any())
+    {{-- @if ($errors->any())
     <script>
         @foreach ($errors->all() as $error)
         UIkit.notification({
@@ -27,7 +27,7 @@
         });
         @endforeach
     </script>
-    @endif
+    @endif --}}
 
     <div class="uk-position-relative">
         <x-login-modal :openLogin="$openLogin ?? false" :openRegister="$openRegister ?? false" />

@@ -45,7 +45,7 @@ class AdminMovieController extends Controller
 
         $genre = Genre::query()->where('name', Arr::pull($valid, 'genre'))->firstOrFail();
 
-        Movie::factory()->state($valid)
+        Movie::factory()
             ->for(
                 $genre
             )
@@ -56,6 +56,7 @@ class AdminMovieController extends Controller
                 Keyword::factory()
                     ->count(random_int(0, 4))
             )
+            ->state($valid)
             ->create();
 
 
@@ -71,7 +72,7 @@ class AdminMovieController extends Controller
     public function show(string $movie_id)
     {
         $movie = Movie::fromHashId($movie_id);
-        //
+        return to_route("movie.show", ['movie' => $movie_id]);
     }
 
     /**

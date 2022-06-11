@@ -26,10 +26,11 @@ class StoreMovieRequest extends FormRequest
     {
         return [
             'title' => 'string|required|min:3|max:100',
-            'year' => 'numeric|min:1800',
-            'genre' => 'required|alpha|exists:genres,name',
+            'year' => 'numeric|min:1800|max:' . now()->year,
+            'genre' => 'required|alpha|min:1|exists:genres,name',
             'description' => 'string|max:5000|nullable',
-            'video' => ['string','required','regex:/(yt:\w{11})|^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube(-nocookie)?\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$/']
+            // 'video' => ['string','required','regex:/(yt:\w{11})|^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube(-nocookie)?\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$/']
+            'video' => ['string', 'required', 'regex:/^yt:[^\x22&?\x2F\s]{11}$/']
         ];
     }
 }

@@ -1,14 +1,19 @@
 <x-layouts.user>
 
     <div class="uk-margin-xlarge-top uk-margin-bottom">
-        <div class="uk-container uk-margin-bottom uk-light">
-            <h1 class="uk-margin-remove-bottom">Hello, {{$user->name}}</h1>
+        <div class="uk-container uk-margin-bottom">
+            <div class="uk-light">
+                <h1 class="uk-margin-remove-bottom uk-display-inline-block">Hello, {{$user->name}}</h1>
+                <h3 class="uk-display-inline-block uk-margin-medium-left">{{$user->email}}</h3>
+            </div>
             @if($user->is_admin)
-            <h3 class="uk-margin-remove-top">(Administrator)</h3>
+            <a href="{{route('admin.index')}}">
+                <span class="uk-label uk-label-primary">Administrator</span>
+            </a>
             @endif
         </div>
 
-        @if (!$user->isAdmin())
+        @if (!$user->isAdmin() || $user->subscribed())
         <div @class(['uk-section', 'uk-section-primary' , 'uk-light' , 'uk-section-xlarge'=> !$user->subscribed()])>
             <div class="uk-container">
                 @if ($user->subscribed())

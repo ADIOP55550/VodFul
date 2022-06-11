@@ -28,7 +28,7 @@ class AdminPlanController extends Controller
      */
     public function create()
     {
-        back();
+        return view('admin.plans');
     }
 
     /**

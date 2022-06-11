@@ -1,16 +1,93 @@
 <x-layouts.admin>
-    {{-- <x-slot name="title"> --}}
-        {{-- Dashboard --}}
-        {{-- </x-slot> --}}
 
     <div class="uk-container uk-margin-top uk-margin-bottom">
         <h1> Manage users </h1>
 
         @php
-        $users = App\Models\User::paginate(20);
         $plans = App\Models\Plan::all();
+        $request = request();
+
+        $page = $request->filled('page') ? $request->get('page') : 1;
+        $perPage = $request->filled('perPage') ? $request->get('perPage') : 20;
+        $search = $request->filled('search') ? $request->get('search') : null;
+
+        $isAdminFilter = $request->filled('isAdmin') ? $request->boolean('isAdmin') : null;
+
+        $query = App\Models\User::query();
+
+        if($isAdminFilter !== null)
+        $query = App\Models\User::where('is_admin', $isAdminFilter);
+
+        if($search !== null)
+        $query = $query->where(fn($query)=>
+        $query
+        ->orWhere('name', 'like', '%' . $search . '%')
+        ->orWhere('email', 'like', '%' . $search . '%')
+        );
+
+        $data = $query->get();
+
+        $users = new \Illuminate\Pagination\LengthAwarePaginator($data->slice(($page-1)*$perPage, $perPage),
+        $data->count(), $perPage, $page, [
+        'path' => $request->url(),
+        'query' => $request->query(),
+        ]);
         @endphp
-        {{-- <a class="uk-button uk-button-default" href="#create-user-modal" uk-toggle>Open</a> --}}
+
+
+        <div class=" uk-margin">
+            <form action="" method="GET" id="filters" class="uk-flex">
+
+                <div class="uk-margin-right">
+                    <div uk-form-custom="target: > * > span:first-child">
+                        <select name="isAdmin" onchange="document.querySelector('#filters').submit()">
+                            <option value="" @selected($isAdminFilter===null)>Any</option>
+                            <option value="1" @selected($isAdminFilter===true)>Yes</option>
+                            <option value="0" @selected($isAdminFilter===false)>No</option>
+                        </select>
+
+                        <button class="uk-button uk-button-default" type="button" tabindex="-1">
+                            Is admin: <span></span>
+                            <span uk-icon="icon: chevron-down"></span>
+                        </button>
+                    </div>
+                </div>
+                <div class="uk-margin-right">
+                    <div uk-form-custom="target: > * > span:first-child">
+                        <select name="perPage" onchange="document.querySelector('#filters').submit()">
+                            @php
+                            $options = collect([5,10,20,30,40,50,100]);
+                            @endphp
+                            @foreach ($options->merge([$perPage])->unique()->sort() as $p)
+                            <option value="{{$p}}" @selected($perPage==$p)>
+                                {{$p}}
+                            </option>
+                            @endforeach
+                        </select>
+
+                        <button class="uk-button uk-button-default" type="button" tabindex="-1">
+                            Per page: <span></span>
+                            <span uk-icon="icon: chevron-down"></span>
+                        </button>
+                    </div>
+                </div>
+
+
+                <div>
+                    <div class="uk-search uk-search-default uk-margin-right">
+                        <span uk-search-icon class="uk-search-icon-flip"></span>
+                        <input title="Search by name or email" uk-tooltip class="uk-search-input" value="{{request('search','')}}" onfocus="this.select()"
+                            name="search" type="search" placeholder="Search">
+                    </div>
+                </div>
+
+                <a href="{{route('admin.users.index')}}" class="uk-button uk-button-default">
+                    Clear filters
+                </a>
+            </form>
+        </div>
+
+        {{$users->links()}}
 
         <table class="uk-table uk-table-middle uk-table-small uk-table-hover uk-table-striped">
             <tr>
@@ -18,7 +95,6 @@
                 <th>Email</th>
                 <th>User Full name</th>
                 <th>Plan</th>
-                {{-- <th>Movies watched</th> --}}
                 <th>Date joined</th>
                 <th>Is admin</th>
                 <th>Actions</th>
@@ -48,7 +124,8 @@
                 </td>
                 <td>
                     <div class="uk-flex uk-flex-start">
-                        {{-- <button class="uk-margin-small-left uk-button uk-button-muted uk-button-small">Edit</button> --}}
+                        {{-- <button
+                            class="uk-margin-small-left uk-button uk-button-muted uk-button-small">Edit</button> --}}
                         <form action="{{route('admin.users.destroy', ['user'=>$u->hashid()])}}" method="POST">
                             @csrf
                             @method('delete')

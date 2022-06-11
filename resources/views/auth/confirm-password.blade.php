@@ -25,10 +25,10 @@
                     </label>
                     <div class="uk-inline">
                         <span class="uk-form-icon" uk-icon="icon: lock"></span>
-                        <input class="uk-input" id="password-input" name="password" type="password">
+                        <input class="uk-input" id="password-input" name="password" required type="password">
                     </div>
                 </div>
-                <button class="uk-button uk-button-secondary uk-width-1-1" type="submit">Log in</button>
+                <button class="uk-button uk-button-secondary uk-width-1-1" type="submit">Confirm</button>
 
             </form>
             <a href="{{route('password.request')}}">Forgot password?</a>

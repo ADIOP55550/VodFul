@@ -40,7 +40,7 @@
                                 class="uk-margin-small-left uk-icon-button uk-button-secondary uk-light" uk-icon="lock"
                                 uk-tooltip="title:Log in to watch; pos: bottom-left; delay: 300"></a>
                             @else
-                            @if(Auth::user()->subscribed())
+                            @if(Auth::user()->subscribed() || Auth::user()->isAdmin())
                             <a href="{{route('movie.show', ['movie'=>$movie->hashid()])}}"
                                 class="uk-margin-small-left uk-icon-button uk-button-secondary uk-light"
                                 uk-icon="play-circle" uk-tooltip="title:Watch; pos: bottom-left; delay: 300"></a>
@@ -67,9 +67,6 @@
                                 </button>
                             </form>
                             @endif
-                            {{-- <a href="{{route('movie.fav', ['id'=>$movie->hashid()])}}"
-                                class="uk-margin-left uk-icon-link" uk-icon="plus"
-                                uk-tooltip="title:Add to favoutrites; pos: bottom-left; delay: 300"></a> --}}
                             @endguest
 
                         </div>
@@ -152,12 +149,27 @@
             )
             )),0,2);
 
+            $watched_movies = Auth::user()->watchStatuses->map(fn($ws)=>$ws->movie_id);
 
             $picks = \App\Models\Movie::query()
             ->whereIn('genre_id', $top_genres)
+            ->whereNotIn('id', $watched_movies)
             ->inRandomOrder()
             ->take(20)
-            ->get();
+            ->get()
+            ->whenEmpty(function ($col){
+
+            $watched_movies = Auth::user()->watchStatuses->map(fn($ws)=>$ws->movie_id);
+            return \App\Models\Movie::query()
+            ->whereNotIn('id', $watched_movies)
+            ->withSum('watchedBy', 'times_watched')
+            ->orderByDesc('watched_by_sum_times_watched')
+            ->skip(5)
+            ->take(40)
+            ->get()
+            ->random(20)
+            ->all();
+            });
 
             }
             @endphp
